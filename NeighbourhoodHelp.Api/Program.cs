@@ -29,6 +29,23 @@ namespace NeighbourhoodHelp.Api
 
             app.MapControllers();
 
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    context.Response.ContentType = "text/plain";
+
+                    var exceptionHandlerPathFeature =
+                        context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
+
+                    if (exceptionHandlerPathFeature?.Error is not null)
+                    {
+                        await context.Response.WriteAsync($"An error occurred: {exceptionHandlerPathFeature.Error.Message}");
+                    }
+                });
+            });
+
             app.Run();
         }
     }

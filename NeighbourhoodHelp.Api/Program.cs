@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NeighbourhoodHelp.Data;
@@ -5,6 +6,8 @@ using NeighbourhoodHelp.Infrastructure.AutoMapper;
 using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Infrastructure.Services;
+using NeighbourhoodHelp.Model.Entities;
+using System;
 
 namespace NeighbourhoodHelp.Api
 {
@@ -20,6 +23,8 @@ namespace NeighbourhoodHelp.Api
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddControllers();
+
+            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();
@@ -65,6 +70,11 @@ namespace NeighbourhoodHelp.Api
                     });
             });
 
+            //Registering the Identity
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -78,7 +88,16 @@ namespace NeighbourhoodHelp.Api
 
             app.UseAuthorization();
 
-            app.UseCors("AllowSpecificOrigin"); 
+            app.UseCors("AllowSpecificOrigin");
+
+            //Get the service scope and obtain the necessary services
+            using var scope = app.Services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+            var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            UserandRolesInitializedData.SeedData(context, userManager, roleManager).Wait();
 
             app.MapControllers();
 

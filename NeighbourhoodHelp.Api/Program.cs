@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NeighbourhoodHelp.Data;
+using NeighbourhoodHelp.Infrastructure.AutoMapper;
 using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Infrastructure.Services;
@@ -16,6 +17,7 @@ namespace NeighbourhoodHelp.Api
             // Add services to the container.
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

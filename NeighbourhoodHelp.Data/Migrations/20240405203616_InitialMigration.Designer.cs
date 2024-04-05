@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240404210005_InitialTable")]
-    partial class InitialTable
+    [Migration("20240405203616_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -156,7 +156,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.AppUser", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -185,12 +185,6 @@ namespace NeighbourhoodHelp.Data.Migrations
 
                     b.Property<string>("Image")
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsAgent")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsServiceProvider")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -226,6 +220,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -256,21 +254,21 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.Errand", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AppUserId")
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("text");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -288,9 +286,6 @@ namespace NeighbourhoodHelp.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("IssuedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ItemName")
                         .IsRequired()
@@ -326,12 +321,12 @@ namespace NeighbourhoodHelp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
                     b.ToTable("Errands");
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.Payment", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -370,57 +365,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.Service", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CompletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("IssuedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("PaymentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ServiceLocation")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PaymentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Services");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -432,7 +376,7 @@ namespace NeighbourhoodHelp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("NeighbourhoodHelp.Model.Models.AppUser", null)
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -441,7 +385,7 @@ namespace NeighbourhoodHelp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("NeighbourhoodHelp.Model.Models.AppUser", null)
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -456,7 +400,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NeighbourhoodHelp.Model.Models.AppUser", null)
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -465,54 +409,37 @@ namespace NeighbourhoodHelp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("NeighbourhoodHelp.Model.Models.AppUser", null)
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.Errand", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
                 {
-                    b.HasOne("NeighbourhoodHelp.Model.Models.AppUser", "AppUser")
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", "AppUser")
                         .WithMany("Errands")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId1");
 
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.Payment", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Payment", b =>
                 {
-                    b.HasOne("NeighbourhoodHelp.Model.Models.Errand", null)
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.Errand", null)
                         .WithOne("Payment")
-                        .HasForeignKey("NeighbourhoodHelp.Model.Models.Payment", "ErrandId")
+                        .HasForeignKey("NeighbourhoodHelp.Model.Entities.Payment", "ErrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.Service", b =>
-                {
-                    b.HasOne("NeighbourhoodHelp.Model.Models.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NeighbourhoodHelp.Model.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Payment");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.AppUser", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.AppUser", b =>
                 {
                     b.Navigation("Errands");
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Models.Errand", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
                 {
                     b.Navigation("Payment")
                         .IsRequired();

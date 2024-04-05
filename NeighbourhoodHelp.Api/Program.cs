@@ -76,6 +76,7 @@ namespace NeighbourhoodHelp.Api
 
             app.UseAuthorization();
 
+            app.UseCors("AllowSpecificOrigin"); 
 
             app.MapControllers();
 

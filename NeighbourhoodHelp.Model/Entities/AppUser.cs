@@ -12,7 +12,7 @@ namespace NeighbourhoodHelp.Model.Entities
         public string City { get; set; }
         public string State { get; set; }
         public int Rating { get; set; } = 0;
-        public bool IsAgent { get; set; }
+        public string Role { get; set; }
         public IList<Errand> Errands { get; set; }
     }
 }

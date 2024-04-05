@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace NeighbourhoodHelp.Data.Migrations
 {
-    public partial class InitialTable : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,8 +37,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                     City = table.Column<string>(type: "text", nullable: false),
                     State = table.Column<string>(type: "text", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
-                    IsAgent = table.Column<bool>(type: "boolean", nullable: false),
-                    IsServiceProvider = table.Column<bool>(type: "boolean", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -170,8 +169,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    IssuedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Street = table.Column<string>(type: "text", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false),
@@ -184,7 +181,8 @@ namespace NeighbourhoodHelp.Data.Migrations
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     Note = table.Column<string>(type: "text", nullable: true),
                     ErrandStatus = table.Column<int>(type: "integer", nullable: false),
-                    AppUserId = table.Column<string>(type: "text", nullable: true),
+                    AppUserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AppUserId1 = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -193,8 +191,8 @@ namespace NeighbourhoodHelp.Data.Migrations
                 {
                     table.PrimaryKey("PK_Errands", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Errands_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
+                        name: "FK_Errands_AspNetUsers_AppUserId1",
+                        column: x => x.AppUserId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
@@ -220,39 +218,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                         name: "FK_Payments_Errands_ErrandId",
                         column: x => x.ErrandId,
                         principalTable: "Errands",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Services",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ServiceLocation = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    IssuedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Services", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Services_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Services_Payments_PaymentId",
-                        column: x => x.PaymentId,
-                        principalTable: "Payments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -295,25 +260,15 @@ namespace NeighbourhoodHelp.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Errands_AppUserId",
+                name: "IX_Errands_AppUserId1",
                 table: "Errands",
-                column: "AppUserId");
+                column: "AppUserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_ErrandId",
                 table: "Payments",
                 column: "ErrandId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_PaymentId",
-                table: "Services",
-                column: "PaymentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_UserId",
-                table: "Services",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -334,13 +289,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "Payments");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Payments");
 
             migrationBuilder.DropTable(
                 name: "Errands");

@@ -11,5 +11,8 @@ namespace NeighbourhoodHelp.Infrastructure.Interfaces
     public interface IPhotoService
     {
         Task<ImageUploadResult> AddPhotoAsync(IFormFile file);
+        Task<ImageUploadResult> UpdatePhotoAsync(string id, IFormFile file);
+        Task<DeletionResult> DeletePhotoAsync(string publicId);
+
     }
 }

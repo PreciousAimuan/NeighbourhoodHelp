@@ -42,5 +42,30 @@ namespace NeighbourhoodHelp.Infrastructure.Services
 
             return uploadResult;
         }
+        public async Task<ImageUploadResult> UpdatePhotoAsync(string id, IFormFile file)
+        {
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using var stream = file.OpenReadStream();
+
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    PublicId = id// specify the public ID of the existing image to be replaced
+                };
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            }
+
+            return uploadResult;
+        }
+
+        public async Task<DeletionResult> DeletePhotoAsync(string publicId)
+        {
+            var deletionParams = new DeletionParams(publicId);
+
+            return await _cloudinary.DestroyAsync(deletionParams);
+        }
     }
 }

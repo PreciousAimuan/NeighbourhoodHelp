@@ -1,7 +1,13 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+<<<<<<< HEAD
+using NeighbourhoodHelp.Data;
+
+=======
 using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Infrastructure.Services;
+>>>>>>> 097563f822ae4e11d6be4c6661843f89d0ec8a6a
 
 namespace NeighbourhoodHelp.Api
 {
@@ -43,6 +49,11 @@ namespace NeighbourhoodHelp.Api
                     { securitySchema, new[] { "Bearer" } }
                 };
                 c.AddSecurityRequirement(securityRequirement);
+            });
+
+            builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
+            {
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
             var app = builder.Build();

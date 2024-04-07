@@ -1,15 +1,11 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NeighbourhoodHelp.Api.Extensions;
 using NeighbourhoodHelp.Data;
-using NeighbourhoodHelp.Infrastructure.AutoMapper;
 using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Infrastructure.Services;
-using NeighbourhoodHelp.Model.Entities;
-using System;
+using NLog;
 
 namespace NeighbourhoodHelp.Api
 {
@@ -22,11 +18,8 @@ namespace NeighbourhoodHelp.Api
             // Add services to the container.
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
-            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddControllers();
-
-            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();
@@ -60,49 +53,13 @@ namespace NeighbourhoodHelp.Api
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowSpecificOrigin",
-                    builder =>
-                    {
-                        builder.WithOrigins("http://example.com")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
-
-            //Registering the Identity
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            // Add schemes either cookies or jwt
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme =
-                    options.DefaultChallengeScheme =
-                        options.DefaultForbidScheme =
-                            options.DefaultScheme =
-                                options.DefaultSignInScheme =
-                                    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["JWT:Issuer"],
-                    ValidateAudience = true,
-                    ValidAudience = builder.Configuration["JWT:Audience"],
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
-                    )
-                };
-            });
-
-            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.ConfigureLoggerService();
 
             var app = builder.Build();
+            var logger = app.Services.GetRequiredService<ILoggerManagerService>();
+            app.ConfigureExceptionHandler(logger);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -115,16 +72,6 @@ namespace NeighbourhoodHelp.Api
 
             app.UseAuthorization();
 
-            app.UseCors("AllowSpecificOrigin");
-
-            //Get the service scope and obtain the necessary services
-            using var scope = app.Services.CreateScope();
-            var serviceProvider = scope.ServiceProvider;
-            var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-            UserandRolesInitializedData.SeedData(context, userManager, roleManager).Wait();
 
             app.MapControllers();
 

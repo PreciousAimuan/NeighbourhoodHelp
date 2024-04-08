@@ -13,6 +13,7 @@ namespace NeighbourhoodHelp.Model.Entities
         public string State { get; set; }
         public int Rating { get; set; } = 0;
         public string Role { get; set; }
+        public bool IsActive { get; set; }
         public IList<Errand> Errands { get; set; }
     }
 }

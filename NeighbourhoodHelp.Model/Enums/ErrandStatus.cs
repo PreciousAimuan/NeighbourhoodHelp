@@ -8,6 +8,7 @@ namespace NeighbourhoodHelp.Model.Enums
 {
     public enum ErrandStatus
     {
+        Pending,
         InProgress,
         Completed
     }

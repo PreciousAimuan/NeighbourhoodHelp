@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using NeighbourhoodHelp.Model.Enums;
 
 namespace NeighbourhoodHelp.Model.Entities
 {
-    public class Errand : BaseEntity 
+    public class Errand : BaseEntity
     {
         public string Description { get; set; }
         public string Street { get; set; }
@@ -23,6 +20,8 @@ namespace NeighbourhoodHelp.Model.Entities
         public int Quantity { get; set; }
         public string? Note { get; set; }
         public ErrandStatus ErrandStatus { get; set; }
+        public decimal Price { get; set; }
+        public int AgentCounterOffers { get; set; } = 0;
         public Guid AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         public Payment Payment { get; set; }

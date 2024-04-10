@@ -18,6 +18,7 @@ namespace NeighbourhoodHelp.Data
         
         public virtual DbSet<Errand> Errands { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<AppUser> appUsers { get; set; }
 
     }
 }

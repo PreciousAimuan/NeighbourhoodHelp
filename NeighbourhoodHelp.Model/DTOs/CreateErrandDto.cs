@@ -1,12 +1,10 @@
-﻿using NeighbourhoodHelp.Model.Entities;
-using NeighbourhoodHelp.Model.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NeighbourhoodHelp.Data.DTOs
+namespace NeighbourhoodHelp.Model.DTOs
 {
     public class CreateErrandDto
     {
@@ -21,10 +19,6 @@ namespace NeighbourhoodHelp.Data.DTOs
         public int Weight { get; set; }
         public int Quantity { get; set; }
         public string? Note { get; set; }
-       /* public ErrandStatus ErrandStatus { get; set; }
-        public Guid AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
-        public Payment Payment { get; set; }*/
-
+        public Guid UserId { get; set;}
     }
 }

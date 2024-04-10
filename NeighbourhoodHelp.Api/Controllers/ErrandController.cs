@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NeighbourhoodHelp.Data.DTOs;
 using NeighbourhoodHelp.Data.IRepository;
+using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Api.Controllers
 {

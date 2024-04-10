@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NeighbourhoodHelp.Data.DTOs
+namespace NeighbourhoodHelp.Model.DTOs
 {
     public class LoginDto
     {

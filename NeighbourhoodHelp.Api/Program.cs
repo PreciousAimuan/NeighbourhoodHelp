@@ -10,6 +10,8 @@ using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Infrastructure.Services;
 using NeighbourhoodHelp.Model.Entities;
 using System;
+using NeighbourhoodHelp.Core.IServices;
+using NeighbourhoodHelp.Core.Services;
 
 namespace NeighbourhoodHelp.Api
 {
@@ -21,6 +23,8 @@ namespace NeighbourhoodHelp.Api
 
             // Add services to the container.
             builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserServices, UserServices>();
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 

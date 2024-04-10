@@ -26,7 +26,7 @@ namespace NeighbourhoodHelp.Data.Repository
             if (request.AgentResponse == AgentResponse.Accept)
             {
                 // Assign the errand to the agent
-                errand.AppUserId = request.AppUserId;
+                errand.UserId = request.AppUserId;
                 await _context.SaveChangesAsync();
                 return "Errand assigned to the agent.";
             }

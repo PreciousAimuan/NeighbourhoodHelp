@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using NeighbourhoodHelp.Api.Extensions;
 using NeighbourhoodHelp.Data;
+using NeighbourhoodHelp.Data.IRepository;
+using NeighbourhoodHelp.Data.Repository;
+using NeighbourhoodHelp.Infrastructure.AutoMapper;
 using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Infrastructure.Services;
-using NLog;
+using NeighbourhoodHelp.Model.Entities;
+using System;
 
 namespace NeighbourhoodHelp.Api
 {
@@ -18,8 +22,14 @@ namespace NeighbourhoodHelp.Api
             // Add services to the container.
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddControllers();
+
+            //Addidng of services
+            builder.Services.AddScoped<IErrandRepository, ErrandRepository>();
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();
@@ -53,13 +63,24 @@ namespace NeighbourhoodHelp.Api
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
-            builder.Services.ConfigureLoggerService();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://example.com")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
+            //Registering the Identity
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
             var app = builder.Build();
-            var logger = app.Services.GetRequiredService<ILoggerManagerService>();
-            app.ConfigureExceptionHandler(logger);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -72,6 +93,16 @@ namespace NeighbourhoodHelp.Api
 
             app.UseAuthorization();
 
+            app.UseCors("AllowSpecificOrigin");
+
+            //Get the service scope and obtain the necessary services
+            using var scope = app.Services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+            var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            UserandRolesInitializedData.SeedData(context, userManager, roleManager).Wait();
 
             app.MapControllers();
 

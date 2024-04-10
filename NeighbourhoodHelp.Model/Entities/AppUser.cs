@@ -15,5 +15,6 @@ namespace NeighbourhoodHelp.Model.Entities
         public string Role { get; set; }
         public bool IsActive { get; set; }
         public IList<Errand> Errands { get; set; }
+
     }
 }

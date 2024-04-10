@@ -18,6 +18,7 @@ namespace NeighbourhoodHelp.Infrastructure.Services
         {
             _config = config;
         }
+
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var message = new MimeMessage();

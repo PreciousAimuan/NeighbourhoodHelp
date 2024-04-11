@@ -21,6 +21,7 @@ namespace NeighbourhoodHelp.Model.Entities
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string DateOfBirth { get; set; }
+        public string Password { get; set; }
         public string Document { get; set; }
         public IList<AppUser> AppUsers { get; set; }
         public IList<Errand> Errands { get; set; }

@@ -47,8 +47,21 @@ namespace NeighbourhoodHelp.Data.Repository
             }
             else if (request.AgentResponse == AgentResponse.Decline)
             {
-                // Notify user and agent, ending negotiation
-                return "Agent declined the offer.";
+                // Soft delete the errand
+                errand.IsDeleted = true;
+                await _context.SaveChangesAsync();
+
+                // Reassign the errand to another agent
+                try
+                {
+                    /*await AssignAgentAsync(errand);*/
+                    return "Errand reassigned to another agent.";
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions
+                    return $"Error: {ex.Message}";
+                }
             }
 
             return "Invalid agent response.";

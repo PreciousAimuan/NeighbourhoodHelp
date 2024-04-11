@@ -24,6 +24,8 @@ namespace NeighbourhoodHelp.Model.Entities
         public int AgentCounterOffers { get; set; } = 0;
         public Guid UserId { get; set; }
         public AppUser AppUser { get; set; }
+        public Guid AgentId { get; set; }
+        public Agent Agent { get; set; }
         public Payment Payment { get; set; }
 
     }

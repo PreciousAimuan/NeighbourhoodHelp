@@ -7,6 +7,7 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
+using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Infrastructure.Services
 {
@@ -18,17 +19,19 @@ namespace NeighbourhoodHelp.Infrastructure.Services
         {
             _config = config;
         }
-
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        public async Task SendEmailAsync(EmailDto emailDto)
         {
+            string body = PopulateRegisterEmail(emailDto.UserName, emailDto.Otp.ToString());
+
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Neighbourhood Help", _config["EmailSettings:Username"])); // Replace with your email address
-            message.To.Add(new MailboxAddress("", toEmail)); // Replace with recipient email address
-            message.Subject = subject;
-            message.Body = new TextPart("plain")
-            {
-                Text = body
-            };
+            message.To.Add(new MailboxAddress("", emailDto.To)); // Replace with recipient email address
+            message.Subject = emailDto.Subject;
+            
+            var builder = new BodyBuilder();
+            builder.HtmlBody = body;
+
+            message.Body = builder.ToMessageBody();
 
             using (var client = new SmtpClient())
             {
@@ -37,6 +40,22 @@ namespace NeighbourhoodHelp.Infrastructure.Services
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
+        }
+        private string PopulateRegisterEmail(string UserName, string Otp)
+        {
+            string body = string.Empty;
+
+            string filePath = Directory.GetCurrentDirectory() + @"\Templates\SignUpEmail.html";   //getting the filepath of the email template
+
+            using (var reader = new StreamReader(filePath))
+            {
+                body = reader.ReadToEnd();
+            }
+
+            body = body.Replace("{UserName}", UserName);
+            body = body.Replace("{Otp}", Otp);
+
+            return body;
         }
     }
 }

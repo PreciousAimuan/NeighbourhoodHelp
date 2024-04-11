@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Infrastructure.Interfaces
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string toEmail, string subject, string body);
+        Task SendEmailAsync(EmailDto emailDto);
     }
 }

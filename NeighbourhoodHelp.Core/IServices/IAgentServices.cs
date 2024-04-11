@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeighbourhoodHelp.Model.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace NeighbourhoodHelp.Core.IServices
 {
     public interface IAgentServices
     {
+        Task<string> AgentSignUpAsync(AgentSignUpDto agentSignUpDto);
     }
 }

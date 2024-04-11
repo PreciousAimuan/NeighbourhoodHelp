@@ -32,6 +32,8 @@ namespace NeighbourhoodHelp.Api
 
             //Addidng of services
             builder.Services.AddScoped<IErrandRepository, ErrandRepository>();
+            builder.Services.AddScoped<IAgentRepository, AgentRepository>();
+            builder.Services.AddScoped<IAgentServices, AgentServices>();
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

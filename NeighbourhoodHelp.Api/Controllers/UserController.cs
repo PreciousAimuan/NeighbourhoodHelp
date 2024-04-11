@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NeighbourhoodHelp.Core.IServices;
+using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Api.Controllers
 {
@@ -14,6 +15,13 @@ namespace NeighbourhoodHelp.Api.Controllers
             _userService = userService;
         }
 
+        [HttpPost("user-sign-up")]
+        public async Task<IActionResult> SignUp([FromForm] UserSignUpDto userSignUpDto)
+        {
+            var newUser = await _userService.UserSignUpAsync(userSignUpDto);
+
+            return Ok("Sign Up Successful. Please Check your email for an OTP");
+        }
         [HttpGet("errandId")]
         public async Task<IActionResult> GetUserByErrandId(Guid errandId)
         {

@@ -14,6 +14,13 @@ namespace NeighbourhoodHelp.Infrastructure.AutoMapper
         public MappingProfile()
         {
             CreateMap<AppUser, LoginDto>();
+            CreateMap<UserSignUpDto, AppUser>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email)); // Assuming Email is used as the username
+            CreateMap<AgentSignUpDto, Agent>()
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email)); // Assuming Email is used as the username
+            
             // Add more mappings if needed
         }
     }

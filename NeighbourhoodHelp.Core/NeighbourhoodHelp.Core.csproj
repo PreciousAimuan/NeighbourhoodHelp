@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NeighbourhoodHelp.Data\NeighbourhoodHelp.Data.csproj" />
+    <ProjectReference Include="..\NeighbourhoodHelp.Infrastructure\NeighbourhoodHelp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

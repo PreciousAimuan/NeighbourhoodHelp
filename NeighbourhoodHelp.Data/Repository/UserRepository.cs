@@ -7,16 +7,49 @@ using System.Text;
 using System.Threading.Tasks;
 using NeighbourhoodHelp.Model.Entities;
 using NeighbourhoodHelp.Model.DTOs;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace NeighbourhoodHelp.Data.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(ApplicationDbContext context, UserManager<AppUser> userManager, IMapper mapper)
         {
             _context = context;
+            _userManager = userManager;
+            _mapper = mapper;
+        }
+        public async Task<string> CreateUserAsync(UserSignUpDto userSignUpDto)
+        {
+            try
+            {
+                var appUser = _mapper.Map<AppUser>(userSignUpDto);
+
+                var createUserResult = await _userManager.CreateAsync(appUser, userSignUpDto.Password);
+                if (!createUserResult.Succeeded)
+                    return ("Failed to create user.");
+
+                var roleUp = await _userManager.AddToRoleAsync(appUser, "User");
+
+                if (!roleUp.Succeeded)
+                    return ("Failed to add to role.");
+
+                _context.appUsers.Add(appUser);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ("An error occurred while creating user and adding to role.");
+            }
+
+            
+            return "Successful";
         }
 
         public async Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId)

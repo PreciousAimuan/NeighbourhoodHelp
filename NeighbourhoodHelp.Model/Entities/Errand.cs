@@ -16,7 +16,7 @@ namespace NeighbourhoodHelp.Model.Entities
         public string Time { get; set; }
         public string Date { get; set; }
         public string ItemName { get; set; }
-        public int Weight { get; set; }
+        public string Weight { get; set; }
         public int Quantity { get; set; }
         public string? Note { get; set; }
         public ErrandStatus ErrandStatus { get; set; }

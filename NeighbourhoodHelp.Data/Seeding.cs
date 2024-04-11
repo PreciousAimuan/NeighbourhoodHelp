@@ -42,9 +42,7 @@ namespace NeighbourhoodHelp.Data
                     PhoneNumber = phoneNumber,
                     Street = street,
                     City = city,
-                    State = state,
-                    Rating = rating,                 
-                    Role = "User"                
+                    State = state
                 };
 
                 IdentityResult result = await userManager.CreateAsync(user, password);

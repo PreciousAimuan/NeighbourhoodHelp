@@ -32,7 +32,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 Time = "3:00pm",
                 Date = "12/6/2024",
                 ItemName = "Radio",
-                Weight = 40,
+                Weight = "40",
                 Note = "No note",
                 UserId = Guid.Parse("272995d6-7a08-4dc9-9a91-fb6d6d2601f4")
             };

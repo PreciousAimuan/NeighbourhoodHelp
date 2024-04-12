@@ -22,7 +22,7 @@ namespace NeighbourhoodHelp.Api.Controllers
 
             return Ok("Sign Up Successful. Please Check your email for an OTP");
         }
-        [HttpGet("errandId")]
+        [HttpGet("get-user-by-errandId")]
         public async Task<IActionResult> GetUserByErrandId(Guid errandId)
         {
             var userbyerrand = await _userService.GetUserByErrandIdAsync(errandId);

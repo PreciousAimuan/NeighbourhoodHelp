@@ -24,15 +24,20 @@ namespace NeighbourhoodHelp.Data.Migrations
 
             modelBuilder.Entity("AgentAppUser", b =>
                 {
-                    b.Property<Guid>("AgentsId")
+                    b.Property<Guid>("AgentId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AppUsersId")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("text");
 
-                    b.HasKey("AgentsId", "AppUsersId");
+                    b.Property<DateTime>("JoinedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.HasIndex("AppUsersId");
+                    b.HasKey("AgentId", "AppUserId");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("AgentAppUser");
                 });
@@ -212,6 +217,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("NIN")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -461,13 +470,13 @@ namespace NeighbourhoodHelp.Data.Migrations
                 {
                     b.HasOne("NeighbourhoodHelp.Model.Entities.Agent", null)
                         .WithMany()
-                        .HasForeignKey("AgentsId")
+                        .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("AppUsersId")
+                        .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

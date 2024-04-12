@@ -54,7 +54,7 @@ namespace NeighbourhoodHelp.Data.Repository
 
         public async Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId)
         {
-            var errand = new Errand
+            /*var errand = new Errand
             {
                 Id = new Guid(),
                 Description = "Radio Fm",
@@ -70,7 +70,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 UserId = Guid.Parse("272995d6-7a08-4dc9-9a91-fb6d6d2601f4")
             };
             _context.Errands.Add(errand);
-            _context.SaveChangesAsync();
+            _context.SaveChangesAsync();*/
 
 
             var Errands = await _context.Errands.Include(c => c.AppUser).FirstOrDefaultAsync(c => c.Id == errandId);

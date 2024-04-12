@@ -6,10 +6,39 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace NeighbourhoodHelp.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialCreateTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "agents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    PostalCode = table.Column<string>(type: "text", nullable: false),
+                    Image = table.Column<string>(type: "text", nullable: true),
+                    Street = table.Column<string>(type: "text", nullable: false),
+                    City = table.Column<string>(type: "text", nullable: false),
+                    State = table.Column<string>(type: "text", nullable: false),
+                    Rating = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    NIN = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    DateOfBirth = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
+                    Document = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_agents", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -36,8 +65,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                     Street = table.Column<string>(type: "text", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false),
                     State = table.Column<string>(type: "text", nullable: false),
-                    Rating = table.Column<int>(type: "integer", nullable: false),
-                    Role = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -75,6 +102,31 @@ namespace NeighbourhoodHelp.Data.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AgentAppUser",
+                columns: table => new
+                {
+                    AgentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AppUserId = table.Column<string>(type: "text", nullable: false),
+                    JoinedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AgentAppUser", x => new { x.AgentId, x.AppUserId });
+                    table.ForeignKey(
+                        name: "FK_AgentAppUser_agents_AgentId",
+                        column: x => x.AgentId,
+                        principalTable: "agents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AgentAppUser_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -177,12 +229,15 @@ namespace NeighbourhoodHelp.Data.Migrations
                     Time = table.Column<string>(type: "text", nullable: false),
                     Date = table.Column<string>(type: "text", nullable: false),
                     ItemName = table.Column<string>(type: "text", nullable: false),
-                    Weight = table.Column<int>(type: "integer", nullable: false),
+                    Weight = table.Column<string>(type: "text", nullable: false),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     Note = table.Column<string>(type: "text", nullable: true),
                     ErrandStatus = table.Column<int>(type: "integer", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AppUserId1 = table.Column<string>(type: "text", nullable: true),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    AgentCounterOffers = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AppUserId = table.Column<string>(type: "text", nullable: false),
+                    AgentId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -191,10 +246,17 @@ namespace NeighbourhoodHelp.Data.Migrations
                 {
                     table.PrimaryKey("PK_Errands", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Errands_AspNetUsers_AppUserId1",
-                        column: x => x.AppUserId1,
+                        name: "FK_Errands_agents_AgentId",
+                        column: x => x.AgentId,
+                        principalTable: "agents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Errands_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,6 +283,11 @@ namespace NeighbourhoodHelp.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AgentAppUser_AppUserId",
+                table: "AgentAppUser",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -260,9 +327,14 @@ namespace NeighbourhoodHelp.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Errands_AppUserId1",
+                name: "IX_Errands_AgentId",
                 table: "Errands",
-                column: "AppUserId1");
+                column: "AgentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Errands_AppUserId",
+                table: "Errands",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_ErrandId",
@@ -273,6 +345,9 @@ namespace NeighbourhoodHelp.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AgentAppUser");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -296,6 +371,9 @@ namespace NeighbourhoodHelp.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Errands");
+
+            migrationBuilder.DropTable(
+                name: "agents");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

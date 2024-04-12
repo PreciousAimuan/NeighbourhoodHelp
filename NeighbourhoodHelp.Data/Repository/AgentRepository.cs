@@ -1,53 +1,62 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using NeighbourhoodHelp.Data.IRepository;
 using NeighbourhoodHelp.Model.DTOs;
-using NeighbourhoodHelp.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using NeighbourhoodHelp.Data.IRepository;
+using Microsoft.EntityFrameworkCore;
+using NeighbourhoodHelp.Model.Entities;
 
 namespace NeighbourhoodHelp.Data.Repository
 {
     public class AgentRepository : IAgentRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<Agent> _userManager;
-        private readonly IMapper _mapper;
-        public AgentRepository(ApplicationDbContext context, UserManager<Agent> userManager, IMapper mapper)
+
+        public AgentRepository(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
-            _mapper = mapper;
         }
-        public async Task<string> CreateAgentAsync(AgentSignUpDto agentSignUpDto)
+
+        public async Task<ErrandDto> GetAgentByErrandIdAsync(Guid errandId)
         {
-            try
+            var errand = new Errand
+           {
+               Id = new Guid(),
+               Description = "Perfume",
+               Street = "ParkLand Estate",
+               City = "Port Harcourt",
+               State = "Rivers State",
+               PostalCode = "5002070",
+               Time = "4:00pm",
+               Date = "15/4/2024",
+               ItemName = "Black Oud",
+               Weight = "70",
+               Note = "No note",
+               UserId = Guid.Parse("0c1837ba-4a03-4dca-a868-26b2a5e4b73e")
+           };
+           _context.Errands.Add(errand);
+           _context.SaveChangesAsync();
+
+            var Errands = await _context.Errands.Include(c => c.Agent).FirstOrDefaultAsync(c => c.Id == errandId);
+            var agentErrandId = new ErrandDto
             {
-                var agent = _mapper.Map<Agent>(agentSignUpDto);
+                FirstName = Errands.Agent.FirstName,
+                LastName = Errands.Agent.LastName,
+                PostalCode = Errands.Agent.PostalCode,
+                Street = Errands.Agent.Street,
+                City = Errands.Agent.City,
+                State = Errands.Agent.State,
+                PhoneNumber = Errands.Agent.PhoneNumber,
+                
+                
 
-                var createAgentResult = await _userManager.CreateAsync(agent, agentSignUpDto.Password);
-                if (!createAgentResult.Succeeded)
-                    return ("Failed to create user.");
+            };
+            return agentErrandId;
 
-                var roleUp = await _userManager.AddToRoleAsync(agent, "Agent");
 
-                if (!roleUp.Succeeded)
-                    return ("Failed to add to role.");
-
-                _context.agents.Add(agent);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return ("An error occurred while creating user and adding to role.");
-            }
-
-            
-            return "Successful";
         }
     }
 }
+

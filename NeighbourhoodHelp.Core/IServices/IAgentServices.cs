@@ -9,6 +9,6 @@ namespace NeighbourhoodHelp.Core.IServices
 {
     public interface IAgentServices
     {
-        Task<string> AgentSignUpAsync(AgentSignUpDto agentSignUpDto);
+        Task<ErrandDto> GetAgentByErrandIdAsync(Guid errandId);
     }
 }

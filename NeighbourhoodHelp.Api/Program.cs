@@ -87,7 +87,7 @@ namespace NeighbourhoodHelp.Api
 
             //Registering the Identity
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); 
 
 
             var app = builder.Build();

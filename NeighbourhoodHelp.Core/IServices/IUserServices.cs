@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using NeighbourhoodHelp.Model.DTOs;
-using NeighbourhoodHelp.Model.Entities;
 
 namespace NeighbourhoodHelp.Core.IServices
 {
@@ -14,8 +13,7 @@ namespace NeighbourhoodHelp.Core.IServices
     {
         Task<string> UserSignUpAsync(UserSignUpDto userSignUpDto);
         Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId);
-
-        Task<List<GetAppUserDto>> GetAllUsers();
-     
+        Task<string> ForgotPassword(string email);
+        Task<string> ResetPassword(string email, string token, string newPassword);
     }
 }

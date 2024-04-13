@@ -10,5 +10,6 @@ namespace NeighbourhoodHelp.Infrastructure.Interfaces
     public interface IEmailService
     {
         Task SendEmailAsync(EmailDto emailDto);
+        Task SendForgotPasswordEmailAsync(EmailDto request);
     }
 }

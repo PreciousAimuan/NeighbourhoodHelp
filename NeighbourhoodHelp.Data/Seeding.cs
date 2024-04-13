@@ -25,6 +25,7 @@ namespace NeighbourhoodHelp.Data
             await CreateAndAssignUser(userManager, "David", "Ogwuche", "dvd@gmail.com", "Ysb123@32", "2349064056077", "Makurdi", "Benue", "Ohen", 5, "User");
             await CreateAndAssignUser(userManager, "Michael", "Batowei", "codedvd@gmail.com", "Ysb123@32", "+2349018015592", "PH", "Porthacort", "Ohen", 4, "Admin");
             await CreateAndAssignUser(userManager, "Ebuwa", "Iguobaro", "ebuwa@gmail.com", "Ysb123@32", "+2349018015592", "PH", "Porthacort", "Garden Estate", 3, "Agent");
+            await CreateAndAssignUser(userManager, "Flo", "Uyot", "florentinaantigha27@gmail.com", "Ysb123@32", "+2349013690696", "Abj", "Abuja", "Army Estate", 4, "User");
         }
 
         private static async Task CreateAndAssignUser(UserManager<AppUser> userManager, string firstName, string lastName, string email, string password, string phoneNumber, string city, string state, string street, int rating, string role)

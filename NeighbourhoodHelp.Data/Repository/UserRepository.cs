@@ -10,6 +10,7 @@ using NeighbourhoodHelp.Model.DTOs;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using NeighbourhoodHelp.Infrastructure.Interfaces;
 
 namespace NeighbourhoodHelp.Data.Repository
 {
@@ -18,12 +19,14 @@ namespace NeighbourhoodHelp.Data.Repository
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public UserRepository(ApplicationDbContext context, UserManager<AppUser> userManager, IMapper mapper)
+        public UserRepository(ApplicationDbContext context, UserManager<AppUser> userManager, IMapper mapper, IEmailService emailService)
         {
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
+            _emailService = emailService;
         }
         public async Task<string> CreateUserAsync(UserSignUpDto userSignUpDto)
         {
@@ -48,7 +51,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 return ("An error occurred while creating user and adding to role.");
             }
 
-
+            
             return "Successful";
         }
 
@@ -83,18 +86,72 @@ namespace NeighbourhoodHelp.Data.Repository
                 State = Errands.AppUser.State,
                 PhoneNumber = Errands.AppUser.PhoneNumber,
                 Email = Errands.AppUser.Email,
-
+               
 
             };
             return userByErrandId;
         }
 
-        public async Task<List<GetAppUserDto>> GetAllUsers()
+        public async Task<string> ForgotPassword(string email)
         {
-            var users = await _context.appUsers.ToListAsync();
-            return _mapper.Map<List<GetAppUserDto>>(users);
+            // Find the user by email
+            var user = await _context.appUsers.FirstOrDefaultAsync(x => x.Email == email);
 
+            if (user == null)
+            {
+                // User not found
+                return "User not found";
+            }
 
+            // Generate a new password reset token
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Construct the password reset link with token
+            var resetLink = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
+
+            // You can send an email with the password reset link to the user
+            var emailContent = new EmailDto
+            {
+                To = email,
+                Subject = "Password Reset",
+                Body = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}"
+            };
+
+            await _emailService.SendForgotPasswordEmailAsync(emailContent);
+
+            // Construct the email subject and body
+            /* var subject = "Password Reset";
+             var body = $"Please click the following link to reset your password: {resetLink}";*/
+
+            // Send the password reset email
+           /* await _emailService.SendForgotPasswordEmailAsync(email, subject, body);*/
+
+            return token;
+        }
+
+        public async Task<string> ResetPassword(string email, string token, string newPassword)
+        {
+            // Find the user by email
+            var user = await _context.appUsers.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+            {
+                // User not found
+                return "User not found";
+            }
+
+            // Reset the password
+            var resetPasswordResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            if (resetPasswordResult.Succeeded)
+            {
+                return "Password reset successfully";
+            }
+            else
+            {
+                // Password reset failed
+                return "Failed to reset password";
+            }
         }
     }
 }

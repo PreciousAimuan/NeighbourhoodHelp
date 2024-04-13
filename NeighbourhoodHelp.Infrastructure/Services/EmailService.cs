@@ -57,5 +57,48 @@ namespace NeighbourhoodHelp.Infrastructure.Services
 
             return body;
         }
+
+        public async Task SendForgotPasswordEmailAsync(EmailDto request)
+        {
+            //var body = PopulateForgotPasswordEmail(request.UserName, request.ResetLink);
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Neighbourhood Help", _config["EmailSettings:Username"]));
+            message.To.Add(new MailboxAddress("", request.To)); // Replace with recipient email address
+            message.Subject = request.Subject;
+            message.Body = new TextPart("plain")
+            {
+                Text = request.Body
+            };
+
+            /*var builder = new BodyBuilder();
+            builder.HtmlBody = body;
+
+            message.Body = builder.ToMessageBody();*/
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_config["EmailSettings:Host"], 587, false);
+                await client.AuthenticateAsync(_config["EmailSettings:Username"], _config["EmailSettings:Password"]); // Replace with your Gmail credentials
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        private string PopulateForgotPasswordEmail(string UserName, string resetLink)
+        {
+            string body = string.Empty;
+
+            string filePath = Directory.GetCurrentDirectory() + @"\Templates\ForgotPasswordEmail.html";   //getting the filepath of the email template
+
+            using (var reader = new StreamReader(filePath))
+            {
+                body = reader.ReadToEnd();
+            }
+
+            body = body.Replace("{UserName}", UserName);
+            body = body.Replace("{ResetLink}", resetLink);
+
+            return body;
+        }
     }
 }

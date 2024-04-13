@@ -30,19 +30,20 @@ namespace NeighbourhoodHelp.Api.Controllers
             return Ok(userbyerrand);
         }
 
-        [HttpGet("Get-All-Users")]
-        public async Task<IActionResult> GetAllUsers()
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(string email)
         {
-            try
-            {
-                var users = await _userService.GetAllUsers();
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var forgotPwdToken = await _userService.ForgotPassword(email);
 
+            return Ok(forgotPwdToken);
+        }
+
+        [HttpPatch("reset-password")]
+        public async Task<IActionResult> ResetPassword(string email, string token, string newPassword)
+        {
+            var resetPwdStatus = await _userService.ResetPassword(email, token, newPassword);
+
+            return Ok(resetPwdStatus);
         }
     }
 }

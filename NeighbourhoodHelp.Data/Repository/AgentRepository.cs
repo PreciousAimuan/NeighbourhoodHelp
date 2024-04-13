@@ -7,16 +7,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NeighbourhoodHelp.Model.Entities;
+using AutoMapper;
 
 namespace NeighbourhoodHelp.Data.Repository
 {
     public class AgentRepository : IAgentRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AgentRepository(ApplicationDbContext context)
+        public AgentRepository(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+            _mapper = mapper;
+        }
+
+        public Task<string> CreateAgentAsync(AgentSignUpDto agentSignUpDto)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ErrandDto> GetAgentByErrandIdAsync(Guid errandId)
@@ -54,6 +63,14 @@ namespace NeighbourhoodHelp.Data.Repository
 
             };
             return agentErrandId;
+
+
+        }
+
+        public async Task<List<GetAgentDto>> GetAllAgents()
+        {
+            var agents = await _context.agents.ToListAsync();
+            return _mapper.Map<List<GetAgentDto>>(agents);
 
 
         }

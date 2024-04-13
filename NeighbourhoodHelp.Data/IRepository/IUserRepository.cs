@@ -14,5 +14,8 @@ namespace NeighbourhoodHelp.Data.IRepository
     {
         Task<string> CreateUserAsync(UserSignUpDto userSignUpDto);
         Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId);
+    
+        Task<List<GetAppUserDto>> GetAllUsers();
     }
+
 }

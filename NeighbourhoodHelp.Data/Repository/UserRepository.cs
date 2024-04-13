@@ -48,7 +48,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 return ("An error occurred while creating user and adding to role.");
             }
 
-            
+
             return "Successful";
         }
 
@@ -83,10 +83,18 @@ namespace NeighbourhoodHelp.Data.Repository
                 State = Errands.AppUser.State,
                 PhoneNumber = Errands.AppUser.PhoneNumber,
                 Email = Errands.AppUser.Email,
-               
+
 
             };
             return userByErrandId;
+        }
+
+        public async Task<List<GetAppUserDto>> GetAllUsers()
+        {
+            var users = await _context.appUsers.ToListAsync();
+            return _mapper.Map<List<GetAppUserDto>>(users);
+
+
         }
     }
 }

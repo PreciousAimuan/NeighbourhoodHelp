@@ -33,6 +33,7 @@ namespace NeighbourhoodHelp.Api
 
             builder.Services.AddControllers();
 
+
             //Addidng of services
             builder.Services.AddScoped<IErrandRepository, ErrandRepository>();
             builder.Services.AddScoped<IAgentRepository, AgentRepository>();

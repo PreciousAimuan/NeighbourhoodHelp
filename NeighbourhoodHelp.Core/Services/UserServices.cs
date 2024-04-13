@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Model.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace NeighbourhoodHelp.Core.Services
 {
@@ -17,11 +18,14 @@ namespace NeighbourhoodHelp.Core.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
+        private readonly IMapper _mapper;
 
-        public UserServices(IUserRepository userRepository, IEmailService emailService)
+        public UserServices(IUserRepository userRepository, IEmailService emailService, IMapper mapper)
         {
             _userRepository = userRepository;
             _emailService = emailService;
+            _mapper = mapper;
+            
         }
 
         public async Task<string> UserSignUpAsync(UserSignUpDto userSignUpDto)
@@ -49,6 +53,12 @@ namespace NeighbourhoodHelp.Core.Services
         public async Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId)
         {
             return await _userRepository.GetUserByErrandIdAsync(errandId);
+        }
+
+        public async Task<List<GetAppUserDto>> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsers();
+            return _mapper.Map<List<GetAppUserDto>>(users);
         }
     }
 }

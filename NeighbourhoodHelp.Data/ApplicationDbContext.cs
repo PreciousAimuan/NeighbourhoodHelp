@@ -25,7 +25,7 @@ namespace NeighbourhoodHelp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<AppUser>()
+           /* modelBuilder.Entity<AppUser>()
                 .HasMany(u => u.Agents)
                 .WithMany(a => a.AppUsers)
                 .UsingEntity<Dictionary<string, object>>(
@@ -37,7 +37,7 @@ namespace NeighbourhoodHelp.Data
                     {
                         a.Property<DateTime>("JoinedAt").HasDefaultValueSql("CURRENT_TIMESTAMP");
                     }
-                );
+                );*/
         }
 
 

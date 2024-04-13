@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240412185429_InitialCreateTable")]
-    partial class InitialCreateTable
+    [Migration("20240413100951_InitialTable")]
+    partial class InitialTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,26 +23,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("AgentAppUser", b =>
-                {
-                    b.Property<Guid>("AgentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("JoinedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.HasKey("AgentId", "AppUserId");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("AgentAppUser");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -182,8 +162,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("City")
-                        .IsRequired()
+                    b.Property<string>("AppUserId")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -197,58 +176,25 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("NIN")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("agents");
                 });
@@ -311,6 +257,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -413,9 +363,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Weight")
                         .IsRequired()
                         .HasColumnType("text");
@@ -466,21 +413,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("AgentAppUser", b =>
-                {
-                    b.HasOne("NeighbourhoodHelp.Model.Entities.Agent", null)
-                        .WithMany()
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -534,10 +466,19 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Agent", b =>
+                {
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
                 {
                     b.HasOne("NeighbourhoodHelp.Model.Entities.Agent", "Agent")
-                        .WithMany("Errands")
+                        .WithMany()
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -560,11 +501,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasForeignKey("NeighbourhoodHelp.Model.Entities.Payment", "ErrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Agent", b =>
-                {
-                    b.Navigation("Errands");
                 });
 
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.AppUser", b =>

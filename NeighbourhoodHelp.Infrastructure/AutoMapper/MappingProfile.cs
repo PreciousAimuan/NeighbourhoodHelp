@@ -17,7 +17,14 @@ namespace NeighbourhoodHelp.Infrastructure.AutoMapper
             CreateMap<SignUpDto, AppUser>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email)); // Assuming Email is used as the username
-            
+            CreateMap<Errand, GetErrandDto>()
+                .ForMember(dest => dest.AppUser, opt => opt.MapFrom(src => src.AppUser)); // Map AppUser to ErrandDto
+
+
+            /*CreateMap<AgentSignUpDto, Agent>()
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email)); // Assuming Email is used as the username
+            */
             // Add more mappings if needed
         }
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Data.IRepository
@@ -13,6 +14,10 @@ namespace NeighbourhoodHelp.Data.IRepository
     {
 
         Task<string> CreateErrand(CreateErrandDto createErrand);
+
+        Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdAsync(Guid userId, PaginationParameters paginParams);
+
+        Task<IList<GetErrandDto>> GetAllErrandsByAgentIdAsync(Guid agentId, PaginationParameters paginParams);
 
     }
 }

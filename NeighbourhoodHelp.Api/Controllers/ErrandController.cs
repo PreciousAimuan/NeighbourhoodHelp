@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NeighbourhoodHelp.Core.IServices;
 using NeighbourhoodHelp.Data.IRepository;
+using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Api.Controllers
@@ -10,9 +12,12 @@ namespace NeighbourhoodHelp.Api.Controllers
     public class ErrandController : ControllerBase
     {
         private readonly IErrandRepository _errandRepository;
-        public ErrandController(IErrandRepository errandRepository)
+        private readonly IErrandServices _errandServices;
+
+        public ErrandController(IErrandRepository errandRepository, IErrandServices errandServices)
         {
             _errandRepository = errandRepository;
+            _errandServices = errandServices;
         }
 
          
@@ -24,6 +29,50 @@ namespace NeighbourhoodHelp.Api.Controllers
             return Ok(newErrand);
 
         }
+
+        [HttpGet("get-errands-by-userId")]
+        public async Task<IActionResult> GetAllErrandsByAppUserId(Guid userId, [FromQuery] PaginationParameters paginParams)
+        {
+            try
+            {
+                var userErrands = await _errandServices.GetAllErrandsByAppUserIdServiceAsync(userId, paginParams);
+
+                if (userErrands == null || userErrands.Count == 0)
+                {
+                    return NotFound("No errand found for the specified user");
+                }
+
+                return Ok(userErrands);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpGet("get-errands-by-agentId")]
+        public async Task<IActionResult> GetAllErrandsByAgentId(Guid agentId, [FromQuery] PaginationParameters paginParams)
+        {
+            try
+            {
+                var agentErrands = await _errandServices.GetAllErrandsByAgentIdServiceAsync(agentId, paginParams);
+
+                if (agentErrands == null || agentErrands.Count == 0)
+                {
+                    return NotFound("The specified agent has no completed errand");
+                }
+
+                return Ok(agentErrands);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+
+
+
 
     }
 

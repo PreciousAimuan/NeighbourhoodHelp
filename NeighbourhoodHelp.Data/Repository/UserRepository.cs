@@ -18,57 +18,44 @@ namespace NeighbourhoodHelp.Data.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        private readonly IEmailService _emailService;
 
-        public UserRepository(ApplicationDbContext context, UserManager<AppUser> userManager, IMapper mapper, IEmailService emailService)
+        public UserRepository(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
+            _tokenService = tokenService;
             _mapper = mapper;
-            _emailService = emailService;
         }
-        public async Task<CompleteSignUpDto> CreateUserAsync(SignUpDto signUpDto)
+        public async Task<string> CreateUserAsync(SignUpDto userSignUpDto)
         {
-         
-                var appUser = _mapper.Map<AppUser>(signUpDto);
+            try
+            {
+                var appUser = _mapper.Map<AppUser>(userSignUpDto);
 
-                var createUserResult = await _userManager.CreateAsync(appUser, signUpDto.Password);
+                var createUserResult = await _userManager.CreateAsync(appUser, userSignUpDto.Password);
                 if (!createUserResult.Succeeded)
-                {
-                    return new CompleteSignUpDto
-                    {
-                        Message = "Failed to create user"
-                    };
-                }
+                    return ("Failed to create user.");
 
-                IdentityResult roleUp = null;
-
-                if (signUpDto.Role.Equals("user", StringComparison.OrdinalIgnoreCase))
-                    roleUp = await _userManager.AddToRoleAsync(appUser, "User");
-                else
-                {
-                    roleUp = await _userManager.AddToRoleAsync(appUser, "Agent");
-                }
+                var roleUp = await _userManager.AddToRoleAsync(appUser, "User");
 
                 if (!roleUp.Succeeded)
-                {
-                    return new CompleteSignUpDto
-                    {
-                        Message = "Failed to add user to role."
-                    };
-                }
-                    
+                    return ("Failed to add to role.");
 
+                _context.appUsers.Add(appUser);
                 await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ("An error occurred while creating user and adding to role.");
+            }
 
-                return new CompleteSignUpDto
-                {
-                    UserId = appUser.Id,
-                    Message = $"Role is {appUser.Role}"
-                };
+            
+            return "Successful";
         }
-        
 
         public async Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId)
         {
@@ -107,66 +94,34 @@ namespace NeighbourhoodHelp.Data.Repository
             return userByErrandId;
         }
 
-        public async Task<string> ForgotPassword(string email)
+        public async Task<object> Login(LoginDto loginDto)
         {
-            // Find the user by email
-            var user = await _context.appUsers.FirstOrDefaultAsync(x => x.Email == email);
 
-            if (user == null)
+            //check if user is valid
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == loginDto.Email); //compares the Email with existing Email
+
+            if (user == null) return null;
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if (!result.Succeeded) return null;
+
+            // Get user role
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault();
+
+            // Generate token
+            var token = _tokenService.CreateToken(user);
+            var loggedin = new LoggedInUserDto
             {
-                // User not found
-                return "User not found";
-            }
-
-            // Generate a new password reset token
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            // Construct the password reset link with token
-            var resetLink = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
-
-            // You can send an email with the password reset link to the user
-            var emailContent = new EmailDto
-            {
-                To = email,
-                Subject = "Password Reset",
-                Body = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}"
+                token = token,
+                email = loginDto.Email,
+                role = role
             };
 
-            await _emailService.SendForgotPasswordEmailAsync(emailContent);
 
-            // Construct the email subject and body
-            /* var subject = "Password Reset";
-             var body = $"Please click the following link to reset your password: {resetLink}";*/
+            return loggedin;
 
-            // Send the password reset email
-           /* await _emailService.SendForgotPasswordEmailAsync(email, subject, body);*/
-
-            return token;
-        }
-
-        public async Task<string> ResetPassword(string email, string token, string newPassword)
-        {
-            // Find the user by email
-            var user = await _context.appUsers.FirstOrDefaultAsync(x => x.Email == email);
-
-            if (user == null)
-            {
-                // User not found
-                return "User not found";
-            }
-
-            // Reset the password
-            var resetPasswordResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
-
-            if (resetPasswordResult.Succeeded)
-            {
-                return "Password reset successfully";
-            }
-            else
-            {
-                // Password reset failed
-                return "Failed to reset password";
-            }
         }
     }
 }

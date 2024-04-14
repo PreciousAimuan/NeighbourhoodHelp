@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240413100951_InitialTable")]
-    partial class InitialTable
+    [Migration("20240413205524_InitialCreateTable")]
+    partial class InitialCreateTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

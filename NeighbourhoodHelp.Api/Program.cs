@@ -25,6 +25,7 @@ namespace NeighbourhoodHelp.Api
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserServices, UserServices>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
             builder.Services.AddScoped<IAgentRepository, AgentRepository>();
            builder.Services.AddScoped<IAgentServices, AgentServices>();

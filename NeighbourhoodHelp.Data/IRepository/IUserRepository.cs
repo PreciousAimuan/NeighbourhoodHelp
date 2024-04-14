@@ -12,7 +12,7 @@ namespace NeighbourhoodHelp.Data.IRepository
 {
     public interface IUserRepository
     {
-        Task<string> CreateUserAsync(UserSignUpDto userSignUpDto);
+        Task<CompleteSignUpDto> CreateUserAsync(SignUpDto signUpDto);
         Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId);
         Task<string> ForgotPassword(string email);
         Task<string> ResetPassword(string email, string token, string newPassword);

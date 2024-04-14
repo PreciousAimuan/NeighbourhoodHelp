@@ -11,7 +11,7 @@ namespace NeighbourhoodHelp.Core.IServices
 {
     public interface IUserServices
     {
-        Task<string> UserSignUpAsync(UserSignUpDto userSignUpDto);
+        Task<CompleteSignUpDto> UserSignUpAsync(SignUpDto signUpDto);
         Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId);
         Task<string> ForgotPassword(string email);
         Task<string> ResetPassword(string email, string token, string newPassword);

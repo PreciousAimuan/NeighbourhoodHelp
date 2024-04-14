@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NeighbourhoodHelp.Model.DTOs
 {
-    public class UserSignUpDto
+    public class SignUpDto
     {
         [Required]
         public string FirstName { get; set; }

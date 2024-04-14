@@ -15,12 +15,12 @@ namespace NeighbourhoodHelp.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("user-sign-up")]
-        public async Task<IActionResult> SignUp([FromForm] UserSignUpDto userSignUpDto)
+        [HttpPost("sign-up")]
+        public async Task<IActionResult> SignUp([FromForm] SignUpDto signUpDto)
         {
-            var newUser = await _userService.UserSignUpAsync(userSignUpDto);
-
-            return Ok("Sign Up Successful. Please Check your email for an OTP");
+            var newUser = await _userService.UserSignUpAsync(signUpDto);
+            
+            return Ok(newUser);
         }
         [HttpGet("get-user-by-errandId")]
         public async Task<IActionResult> GetUserByErrandId(Guid errandId)

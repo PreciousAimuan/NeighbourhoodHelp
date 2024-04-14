@@ -9,7 +9,6 @@ namespace NeighbourhoodHelp.Data.IRepository
 {
     public interface IAgentRepository
     {
-        Task<string> CreateAgentAsync(AgentSignUpDto agentSignUpDto);
         Task<ErrandDto> GetAgentByErrandIdAsync(Guid errandId);
         Task<List<GetAgentDto>> GetAllAgents();
 

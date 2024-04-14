@@ -23,10 +23,6 @@ namespace NeighbourhoodHelp.Data.Repository
             _mapper = mapper;
         }
 
-        public Task<string> CreateAgentAsync(AgentSignUpDto agentSignUpDto)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<ErrandDto> GetAgentByErrandIdAsync(Guid errandId)
         {
@@ -46,7 +42,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 UserId = Guid.Parse("0c1837ba-4a03-4dca-a868-26b2a5e4b73e")*/
             };
             _context.Errands.Add(errand);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var Errands = await _context.Errands.Include(c => c.Agent).FirstOrDefaultAsync(c => c.Id == errandId);
             var agentErrandId = new ErrandDto

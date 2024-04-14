@@ -28,32 +28,47 @@ namespace NeighbourhoodHelp.Data.Repository
             _mapper = mapper;
             _emailService = emailService;
         }
-        public async Task<string> CreateUserAsync(UserSignUpDto userSignUpDto)
+        public async Task<CompleteSignUpDto> CreateUserAsync(SignUpDto signUpDto)
         {
-            try
-            {
-                var appUser = _mapper.Map<AppUser>(userSignUpDto);
+         
+                var appUser = _mapper.Map<AppUser>(signUpDto);
 
-                var createUserResult = await _userManager.CreateAsync(appUser, userSignUpDto.Password);
+                var createUserResult = await _userManager.CreateAsync(appUser, signUpDto.Password);
                 if (!createUserResult.Succeeded)
-                    return ("Failed to create user.");
+                {
+                    return new CompleteSignUpDto
+                    {
+                        Message = "Failed to create user"
+                    };
+                }
 
-                var roleUp = await _userManager.AddToRoleAsync(appUser, "User");
+                IdentityResult roleUp = null;
+
+                if (signUpDto.Role.Equals("user", StringComparison.OrdinalIgnoreCase))
+                    roleUp = await _userManager.AddToRoleAsync(appUser, "User");
+                else
+                {
+                    roleUp = await _userManager.AddToRoleAsync(appUser, "Agent");
+                }
 
                 if (!roleUp.Succeeded)
-                    return ("Failed to add to role.");
+                {
+                    return new CompleteSignUpDto
+                    {
+                        Message = "Failed to add user to role."
+                    };
+                }
+                    
 
-                _context.appUsers.Add(appUser);
                 await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return ("An error occurred while creating user and adding to role.");
-            }
 
-            
-            return "Successful";
+                return new CompleteSignUpDto
+                {
+                    UserId = appUser.Id,
+                    Message = $"Role is {appUser.Role}"
+                };
         }
+        
 
         public async Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId)
         {

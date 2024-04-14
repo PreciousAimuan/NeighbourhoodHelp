@@ -28,10 +28,6 @@ namespace NeighbourhoodHelp.Core.Services
             _mapper = mapper;
         }
 
-        public Task<string> AgentSignUpAsync(AgentSignUpDto agentSignUpDto)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<ErrandDto> GetAgentByErrandIdAsync(Guid errandId)
         {

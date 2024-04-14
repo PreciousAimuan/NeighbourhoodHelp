@@ -24,9 +24,9 @@ namespace NeighbourhoodHelp.Core.Services
             _emailService = emailService;
         }
 
-        public async Task<string> UserSignUpAsync(UserSignUpDto userSignUpDto)
+        public async Task<CompleteSignUpDto> UserSignUpAsync(SignUpDto signUpDto)
         {
-            await _userRepository.CreateUserAsync(userSignUpDto);
+            var user = await _userRepository.CreateUserAsync(signUpDto);
 
             Random rand = new Random();
 
@@ -34,15 +34,14 @@ namespace NeighbourhoodHelp.Core.Services
 
             var email = new EmailDto
             {
-                To = userSignUpDto.Email,
+                To = signUpDto.Email,
                 Subject = "Verify Your Email",
-                UserName = userSignUpDto.FirstName,
+                UserName = signUpDto.FirstName,
                 Otp = newOtp
             };
-            
 
             await _emailService.SendEmailAsync(email);
-            return("Successful");
+            return user;
         }
 
 

@@ -24,25 +24,11 @@ namespace NeighbourhoodHelp.Core.Services
             _emailService = emailService;
         }
 
-        public async Task<string> UserSignUpAsync(SignUpDto userSignUpDto)
+        public async Task<CompleteSignUpDto> UserSignUpAsync(SignUpDto signUpDto)
         {
-            await _userRepository.CreateUserAsync(userSignUpDto);
-
-            Random rand = new Random();
-
-            int newOtp = rand.Next(100000, 999999); //Generates a random 6 digit number as OTP
-
-            var email = new EmailDto
-            {
-                To = userSignUpDto.Email,
-                Subject = "Verify Your Email",
-                UserName = userSignUpDto.FirstName,
-                Otp = newOtp
-            };
-            
-
-            await _emailService.SendEmailAsync(email);
-            return("Successful");
+            var result = await _userRepository.CreateUserAsync(signUpDto);
+            return result;
+           
         }
 
 
@@ -51,9 +37,20 @@ namespace NeighbourhoodHelp.Core.Services
             return await _userRepository.GetUserByErrandIdAsync(errandId);
         }
 
-        public async Task<object> LoginService(LoginDto loginDto)
+        public async Task<string> ForgotPassword(string email)
         {
-            return await _userRepository.Login(loginDto);
+            return await _userRepository.ForgotPassword(email);
         }
+
+        public async Task<string> ResetPassword(string email, string token, string newPassword)
+        {
+            return await _userRepository.ResetPassword(email, token, newPassword);
+        }
+
+        public async Task<bool> VerifyOtpAsync(string email, string otp)
+        {
+            return await _userRepository.VerifyOtpAsync(email, otp);
+        }
+
     }
 }

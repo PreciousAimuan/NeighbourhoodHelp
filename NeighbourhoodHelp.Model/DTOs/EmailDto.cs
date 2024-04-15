@@ -12,7 +12,7 @@ namespace NeighbourhoodHelp.Model.DTOs
         public string Subject { get; set; }
         public string Body { get; set; }
         public string UserName { get; set; }
-        public int Otp { get; set; }
+        public string Otp { get; set; }
         public  string ResetLink { get; set; }
     }
 }

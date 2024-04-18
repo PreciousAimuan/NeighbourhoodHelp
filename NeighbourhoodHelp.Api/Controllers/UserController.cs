@@ -15,12 +15,12 @@ namespace NeighbourhoodHelp.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUp([FromForm] SignUpDto signUpDto)
+        [HttpPost("user-sign-up")]
+        public async Task<IActionResult> SignUp([FromForm] SignUpDto userSignUpDto)
         {
-            var newUser = await _userService.UserSignUpAsync(signUpDto);
-            
-            return Ok(newUser);
+            var newUser = await _userService.UserSignUpAsync(userSignUpDto);
+
+            return Ok("Sign Up Successful. Please Check your email for an OTP");
         }
         [HttpGet("get-user-by-errandId")]
         public async Task<IActionResult> GetUserByErrandId(Guid errandId)
@@ -30,21 +30,13 @@ namespace NeighbourhoodHelp.Api.Controllers
             return Ok(userbyerrand);
         }
 
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword(string email)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var forgotPwdToken = await _userService.ForgotPassword(email);
+            //return result
+            return Ok(await _userService.LoginService(loginDto));
+        } 
 
-            return Ok(forgotPwdToken);
-        }
-
-        [HttpPatch("reset-password")]
-        public async Task<IActionResult> ResetPassword(string email, string token, string newPassword)
-        {
-            var resetPwdStatus = await _userService.ResetPassword(email, token, newPassword);
-
-            return Ok(resetPwdStatus);
-        }
 
         [HttpPatch("verify-otp")]
         public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpRequestDto request)
@@ -52,6 +44,7 @@ namespace NeighbourhoodHelp.Api.Controllers
             var verifyOtpCode = await _userService.VerifyOtpAsync(request.Email, request.Otp);
             return Ok(verifyOtpCode);
         }
+
 
 
     }

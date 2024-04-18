@@ -13,10 +13,13 @@ namespace NeighbourhoodHelp.Data.IRepository
 {
     public interface IUserRepository
     {
-        Task<CompleteSignUpDto> CreateUserAsync(SignUpDto signUpDto);
+        Task<string> CreateUserAsync(SignUpDto userSignUpDto);
         Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId);
+
+        Task<object> Login(LoginDto loginDto);
         Task<string> ForgotPassword(string email);
         Task<string> ResetPassword(string email, string token, string newPassword);
         Task<bool> VerifyOtpAsync(string email, string otp);
+
     }
 }

@@ -24,15 +24,11 @@ namespace NeighbourhoodHelp.Core.Services
             _emailService = emailService;
         }
 
-        public async Task<string> UserSignUpAsync(SignUpDto userSignUpDto)
+
+        public async Task<CompleteSignUpDto> UserSignUpAsync(SignUpDto signUpDto)
         {
-
-            var result = await _userRepository.CreateUserAsync(signUpDto);
-            return result;
-           
-
+            return await _userRepository.CreateUserAsync(signUpDto);
         }
-
 
         public async Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId)
         {
@@ -44,10 +40,24 @@ namespace NeighbourhoodHelp.Core.Services
             return await _userRepository.Login(loginDto);
         }
 
+        public async Task<string> ForgotPassword(string email)
+        {
+            return await _userRepository.ForgotPassword(email);
+        }
+
+        public async Task<string> ResetPassword(string email, string token, string newPassword)
+        {
+            return await _userRepository.ResetPassword(email, token, newPassword);
+        }
+
         public async Task<bool> VerifyOtpAsync(string email, string otp)
         {
             return await _userRepository.VerifyOtpAsync(email, otp);
         }
 
+        public async Task<string> UpdateUserProfile(Guid id, UpdateUserProfileDto userProfileDto)
+        {
+            return await _userRepository.UpdateUserProfile(id, userProfileDto);
+        }
     }
 }

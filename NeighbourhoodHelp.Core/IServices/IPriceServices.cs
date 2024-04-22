@@ -1,10 +1,13 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using NeighbourhoodHelp.Model.DTOs;
-using NeighbourhoodHelp.Model.Entities;
 
-namespace NeighbourhoodHelp.Data.IRepository
+namespace NeighbourhoodHelp.Core.IServices
 {
-    public interface IPriceRepository
+    public interface IPriceServices
     {
         Task<AgentDto> AgentAcceptPrice(AgentDto request);
         Task<string> AgentCounterPrice(PriceNegotiationDto request);

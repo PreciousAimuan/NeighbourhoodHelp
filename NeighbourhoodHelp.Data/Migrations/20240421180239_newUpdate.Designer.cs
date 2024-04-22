@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240415203238_InitialCreateTable")]
-    partial class InitialCreateTable
+    [Migration("20240421180239_newUpdate")]
+    partial class newUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -186,6 +186,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
@@ -340,6 +344,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PostalCode")
@@ -413,9 +418,6 @@ namespace NeighbourhoodHelp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ErrandId")
-                        .IsUnique();
-
                     b.ToTable("Payments");
                 });
 
@@ -482,7 +484,7 @@ namespace NeighbourhoodHelp.Data.Migrations
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
                 {
                     b.HasOne("NeighbourhoodHelp.Model.Entities.Agent", "Agent")
-                        .WithMany()
+                        .WithMany("Errands")
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -498,24 +500,14 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Payment", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Agent", b =>
                 {
-                    b.HasOne("NeighbourhoodHelp.Model.Entities.Errand", null)
-                        .WithOne("Payment")
-                        .HasForeignKey("NeighbourhoodHelp.Model.Entities.Payment", "ErrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Errands");
                 });
 
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.AppUser", b =>
                 {
                     b.Navigation("Errands");
-                });
-
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
-                {
-                    b.Navigation("Payment")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

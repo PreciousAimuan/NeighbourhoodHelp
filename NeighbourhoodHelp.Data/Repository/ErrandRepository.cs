@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using NeighbourhoodHelp.Infrastructure.Helpers;
+using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Data.Repository
@@ -17,15 +18,30 @@ namespace NeighbourhoodHelp.Data.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public ErrandRepository(ApplicationDbContext context, IMapper mapper)
+        public ErrandRepository(ApplicationDbContext context, IMapper mapper, IEmailService emailService)
         {
             _context = context;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
-        public async Task<string> CreateErrand(CreateErrandDto createErrand)
+        public async Task<Agent> CreateErrand(CreateErrandDto createErrand)
         {
+            var agentsWithMatchingPostalCode = _context.agents
+                .Include(a => a.AppUser)
+                .Where(a => a.PostalCode == createErrand.PostalCode && !a.IsActive)
+                .ToList();
+
+            if (!agentsWithMatchingPostalCode.Any())
+            {
+                throw new InvalidOperationException("No agents found for the given postal code");
+            }
+
+            var random = new Random();
+            var randomIndex = random.Next(0, agentsWithMatchingPostalCode.Count);
+            var randomAgent = agentsWithMatchingPostalCode[randomIndex];
 
             var newErrand = new Errand
             {
@@ -40,12 +56,15 @@ namespace NeighbourhoodHelp.Data.Repository
                 Weight = createErrand.Weight,
                 Quantity = createErrand.Quantity,
                 Note = createErrand.Note,
-
+                Price = createErrand.Price,
+                AppUserId = createErrand.UserId,
+                AgentId = randomAgent.Id
             };
-            await _context.Errands.AddAsync(newErrand);
-            var saveChanges = await _context.SaveChangesAsync();
-            return "Errand created Successfully";
 
+            _context.Errands.Add(newErrand);
+            await _context.SaveChangesAsync();
+
+            return randomAgent;
         }
 
         public async Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdAsync(Guid userId, PaginationParameters paginParams)
@@ -104,8 +123,14 @@ namespace NeighbourhoodHelp.Data.Repository
 
         }
 
-
-
+        public async Task<ErrandDto> GetPendingErrandByAgentId(Guid agentId)
+        {
+            var pendingErrand = await _context.Errands
+                .Include(e => e.Agent)
+                .FirstOrDefaultAsync(e => e.Agent.Id == agentId);
+            var ErrandsDetail = _mapper.Map<ErrandDto>(pendingErrand);
+            return ErrandsDetail;
+        }
     }
 }
 /*var existingUser = await _context.AppUsers.FirstOrDefaultAsync(e => e.Email == appUserDto.Email);

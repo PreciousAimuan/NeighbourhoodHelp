@@ -11,12 +11,10 @@ namespace NeighbourhoodHelp.Api.Controllers
     [ApiController]
     public class ErrandController : ControllerBase
     {
-        private readonly IErrandRepository _errandRepository;
         private readonly IErrandServices _errandServices;
 
-        public ErrandController(IErrandRepository errandRepository, IErrandServices errandServices)
+        public ErrandController(IErrandServices errandServices)
         {
-            _errandRepository = errandRepository;
             _errandServices = errandServices;
         }
 
@@ -25,7 +23,7 @@ namespace NeighbourhoodHelp.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateErrandDto createErrand)
         {
 
-            var newErrand = await _errandRepository.CreateErrand(createErrand);
+            var newErrand = await _errandServices.CreateErrand(createErrand);
             return Ok(newErrand);
 
         }
@@ -68,6 +66,13 @@ namespace NeighbourhoodHelp.Api.Controllers
             {
                 return StatusCode(500, "Internal Server Error");
             }
+        }
+
+        [HttpGet("GetPendingErrandByAgentId")]
+        public async Task<IActionResult> GetPendingErrands(Guid agentId)
+        {
+            var pendingErrands = await _errandServices.GetPendingErrandByAgentId(agentId);
+            return Ok(pendingErrands);
         }
 
 

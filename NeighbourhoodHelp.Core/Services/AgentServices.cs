@@ -33,6 +33,17 @@ namespace NeighbourhoodHelp.Core.Services
         {
             return await _agentRepository.GetAgentByErrandIdAsync(errandId);
         }
+
+        public async Task<string> UpdateAgentProfile(UpdateAgentProfileDto agentProfileDto)
+        {
+            return await _agentRepository.UpdateAgentProfile(agentProfileDto);
+        }
+
+        public async Task<string> CreateAgent(string id, CreateAgentDto agentDto)
+        {
+            return await _agentRepository.CreateAgentAsync(id, agentDto);
+        }
+
         public async Task<List<GetAgentDto>> GetAllAgents()
         {
             var agents = await _agentRepository.GetAllAgents();

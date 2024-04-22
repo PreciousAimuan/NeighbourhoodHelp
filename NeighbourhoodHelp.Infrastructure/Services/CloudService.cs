@@ -12,10 +12,10 @@ using NeighbourhoodHelp.Infrastructure.Interfaces;
 
 namespace NeighbourhoodHelp.Infrastructure.Services
 {
-    public class PhotoService : IPhotoService
+    public class CloudService : ICloudService
     {
         private readonly Cloudinary _cloudinary;
-        public PhotoService(IOptions<CloudinarySettings> config)
+        public CloudService(IOptions<CloudinarySettings> config)
         {
             var acc = new Account
             (
@@ -66,6 +66,24 @@ namespace NeighbourhoodHelp.Infrastructure.Services
             var deletionParams = new DeletionParams(publicId);
 
             return await _cloudinary.DestroyAsync(deletionParams);
+        }
+
+        public async Task<RawUploadResult> AddDocumentAsync(IFormFile doc)
+        {
+            var uploadResult = new RawUploadResult(); //method for uploading document
+            if (doc.Length > 0) //Checks if there is at least 1 file
+            {
+                using var stream = doc.OpenReadStream(); //Reads the file
+
+                var uploadParams = new RawUploadParams
+                {
+                    File = new FileDescription(doc.FileName, stream),
+                };
+
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);  //uploads the file to cloudinary
+            }
+
+            return uploadResult;
         }
     }
 }

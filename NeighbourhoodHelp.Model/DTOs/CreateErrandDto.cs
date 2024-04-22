@@ -19,6 +19,7 @@ namespace NeighbourhoodHelp.Model.DTOs
         public string Weight { get; set; }
         public int Quantity { get; set; }
         public string? Note { get; set; }
-        public Guid UserId { get; set;}
+        public string UserId { get; set;}
+        public decimal Price { get; set; }
     }
 }

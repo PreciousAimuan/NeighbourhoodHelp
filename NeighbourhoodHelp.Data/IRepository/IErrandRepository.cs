@@ -13,11 +13,10 @@ namespace NeighbourhoodHelp.Data.IRepository
     public interface IErrandRepository
     {
 
-        Task<string> CreateErrand(CreateErrandDto createErrand);
-
+        Task<Agent> CreateErrand(CreateErrandDto createErrand);
         Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdAsync(Guid userId, PaginationParameters paginParams);
-
         Task<IList<GetErrandDto>> GetAllErrandsByAgentIdAsync(Guid agentId, PaginationParameters paginParams);
+        Task<ErrandDto> GetPendingErrandByAgentId(Guid agentId);
 
     }
 }

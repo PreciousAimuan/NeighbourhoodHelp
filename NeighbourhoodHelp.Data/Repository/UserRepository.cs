@@ -22,92 +22,77 @@ namespace NeighbourhoodHelp.Data.Repository
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
+        private readonly ICloudService _cloudService;
 
-        public UserRepository(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, IMapper mapper)
+        public UserRepository(ApplicationDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, IMapper mapper, IEmailService emailService, ICloudService cloudService)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _mapper = mapper;
+            _emailService = emailService;
+            _cloudService = cloudService;
         }
-        public async Task<string> CreateUserAsync(SignUpDto userSignUpDto)
+        public async Task<CompleteSignUpDto> CreateUserAsync(SignUpDto signUpDto)
         {
-
-            try
-            {
-                var appUser = _mapper.Map<AppUser>(userSignUpDto);
-
-                var createUserResult = await _userManager.CreateAsync(appUser, userSignUpDto.Password);
-
          
-            var appUser = _mapper.Map<AppUser>(signUpDto);
+                var appUser = _mapper.Map<AppUser>(signUpDto);
 
-            
-            Random rand = new Random();
-
-            string newOtp = rand.Next(100000, 999999).ToString(); //Generates a random 6 digit number as OTP
-            appUser.Otp = newOtp;
-
-            var email = new EmailDto
-            {
-                To = signUpDto.Email,
-                Subject = "Verify Your Email",
-                UserName = signUpDto.FirstName,
-                Otp = newOtp
-            };
-
-            await _emailService.SendEmailAsync(email);
-
-            
-
-            var createUserResult = await _userManager.CreateAsync(appUser, signUpDto.Password);
-
+                var createUserResult = await _userManager.CreateAsync(appUser, signUpDto.Password);
                 if (!createUserResult.Succeeded)
-                    return ("Failed to create user.");
+                {
+                    return new CompleteSignUpDto
+                    {
+                        Message = "Failed to create user"
+                    };
+                }
 
-                var roleUp = await _userManager.AddToRoleAsync(appUser, "User");
+                IdentityResult roleUp = null;
+
+                if (signUpDto.Role.Equals("user", StringComparison.OrdinalIgnoreCase))
+                    roleUp = await _userManager.AddToRoleAsync(appUser, "User");
+                else
+                {
+                    roleUp = await _userManager.AddToRoleAsync(appUser, "Agent");
+                }
 
                 if (!roleUp.Succeeded)
-                    return ("Failed to add to role.");
+                {
+                    return new CompleteSignUpDto
+                    {
+                        Message = "Failed to add user to role."
+                    };
+                }
+                    
+                Random rand = new Random();
 
-                _context.appUsers.Add(appUser);
+                string newOtp = rand.Next(100000, 999999).ToString(); //Generates a random 6 digit number as OTP
+                appUser.Otp = newOtp;
+
+                var email = new EmailDto
+                {
+                    To = signUpDto.Email,
+                    Subject = "Verify Your Email",
+                    UserName = signUpDto.FirstName,
+                    Otp = newOtp
+                };
+
+                await _emailService.SendEmailAsync(email);
+
                 await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return ("An error occurred while creating user and adding to role.");
-            }
-
 
                 return new CompleteSignUpDto
                 {
                     UserId = appUser.Id,
-                    Message = appUser.Role
+                    Message = $"Role is {appUser.Role}"
                 };
-
         }
+        
 
         public async Task<ErrandDto> GetUserByErrandIdAsync(Guid errandId)
         {
-            /*var errand = new Errand
-            {
-                Id = new Guid(),
-                Description = "Radio Fm",
-                Street = "Akeem Alao",
-                City = "Ikeja",
-                State = "Lagos",
-                PostalCode = "5002070",
-                Time = "3:00pm",
-                Date = "12/6/2024",
-                ItemName = "Radio",
-                Weight = "40",
-                Note = "No note",
-                UserId = Guid.Parse("272995d6-7a08-4dc9-9a91-fb6d6d2601f4")
-            };
-            _context.Errands.Add(errand);
-            _context.SaveChangesAsync();*/
-
 
             var Errands = await _context.Errands.Include(c => c.AppUser).FirstOrDefaultAsync(c => c.Id == errandId);
             var userByErrandId = new ErrandDto
@@ -155,6 +140,61 @@ namespace NeighbourhoodHelp.Data.Repository
 
         }
 
+        public async Task<string> ForgotPassword(string email)
+        {
+            // Find the user by email
+            var user = await _context.appUsers.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+            {
+                // User not found
+                return "User not found";
+            }
+
+            // Generate a new password reset token
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Construct the password reset link with token
+            var resetLink = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
+
+            // You can send an email with the password reset link to the user
+            var emailContent = new EmailDto
+            {
+                To = email,
+                Subject = "Password Reset",
+                Body = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}"
+            };
+
+            await _emailService.SendForgotPasswordEmailAsync(emailContent);
+
+            return token;
+        }
+
+        public async Task<string> ResetPassword(string email, string token, string newPassword)
+        {
+            // Find the user by email
+            var user = await _context.appUsers.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+            {
+                // User not found
+                return "User not found";
+            }
+
+            // Reset the password
+            var resetPasswordResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            if (resetPasswordResult.Succeeded)
+            {
+                return "Password reset successfully";
+            }
+            else
+            {
+                // Password reset failed
+                return "Failed to reset password";
+            }
+        }
+
         public async Task<bool> VerifyOtpAsync(string email, string otp)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -183,7 +223,29 @@ namespace NeighbourhoodHelp.Data.Repository
             return false; // OTP verification failed
         }
 
+        public async Task<string> UpdateUserProfile(Guid id, UpdateUserProfileDto userProfileDto)
+        {
+            var existingUser = await _context.appUsers.FirstOrDefaultAsync(x => x.Id.Equals(id));
 
+            var picture = await _cloudService.AddPhotoAsync(userProfileDto.Image);
+            if (existingUser == null)
+            {
+                return null;
+            }
+            existingUser.FirstName = userProfileDto.FirstName;
+            existingUser.LastName = userProfileDto.LastName;
+            existingUser.Email = userProfileDto.Email;
+            existingUser.PostalCode = userProfileDto.PostalCode;
+            existingUser.PhoneNumber = userProfileDto.PhoneNumber;
+            existingUser.Image = picture.Url.ToString();
+            existingUser.State = userProfileDto.State;
+            existingUser.City = userProfileDto.City;
+            existingUser.Street = userProfileDto.Street;
+
+            await _context.SaveChangesAsync();
+            return ("Updated Successfully");
+
+        }
 
     }
 }

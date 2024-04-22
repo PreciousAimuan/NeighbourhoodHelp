@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NeighbourhoodHelp.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240421130616_j2tw")]
+    partial class j2tw
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,10 +226,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("ErrandId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -346,7 +344,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PostalCode")
@@ -373,9 +370,6 @@ namespace NeighbourhoodHelp.Data.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UserCounterOffers")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Weight")
                         .IsRequired()
@@ -492,7 +486,7 @@ namespace NeighbourhoodHelp.Data.Migrations
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
                 {
                     b.HasOne("NeighbourhoodHelp.Model.Entities.Agent", "Agent")
-                        .WithMany("Errands")
+                        .WithMany()
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -515,11 +509,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasForeignKey("NeighbourhoodHelp.Model.Entities.Payment", "ErrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Agent", b =>
-                {
-                    b.Navigation("Errands");
                 });
 
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.AppUser", b =>

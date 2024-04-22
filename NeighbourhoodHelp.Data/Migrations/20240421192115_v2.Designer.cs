@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240413205524_InitialCreateTable")]
-    partial class InitialCreateTable
+    [Migration("20240421192115_v2")]
+    partial class v2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -186,6 +186,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
@@ -222,6 +226,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ErrandId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -246,6 +254,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Otp")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
@@ -336,6 +348,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PostalCode")
@@ -362,6 +375,9 @@ namespace NeighbourhoodHelp.Data.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserCounterOffers")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Weight")
                         .IsRequired()
@@ -478,7 +494,7 @@ namespace NeighbourhoodHelp.Data.Migrations
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
                 {
                     b.HasOne("NeighbourhoodHelp.Model.Entities.Agent", "Agent")
-                        .WithMany()
+                        .WithMany("Errands")
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -501,6 +517,11 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasForeignKey("NeighbourhoodHelp.Model.Entities.Payment", "ErrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Agent", b =>
+                {
+                    b.Navigation("Errands");
                 });
 
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.AppUser", b =>

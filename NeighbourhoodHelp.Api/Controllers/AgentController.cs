@@ -16,6 +16,13 @@ namespace NeighbourhoodHelp.Api.Controllers
             _agentServices = agentServices;
         }
 
+        [HttpPatch("create-agent")]
+        public async Task<IActionResult> CreateAgent(string id, [FromForm]  CreateAgentDto agentDto)
+        {
+            var newAgent = await _agentServices.CreateAgent(id, agentDto);
+            return Ok(newAgent);
+        }
+
         [HttpGet("get-agent-by-errandId")]
         public async Task<IActionResult> GetUserByErrandId(Guid errandId)
         {
@@ -36,6 +43,13 @@ namespace NeighbourhoodHelp.Api.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
 
+        }
+        
+        [HttpPatch("Update-Agent-Profile")]
+        public async Task<IActionResult> UpdateAgentProfile(UpdateAgentProfileDto agentProfileDto)
+        {
+            var updateAgent = await _agentServices.UpdateAgentProfile(agentProfileDto);
+            return Ok(updateAgent);
         }
     }
 }

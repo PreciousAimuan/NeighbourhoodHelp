@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace NeighbourhoodHelp.Data.Migrations
 {
-    public partial class InitialCreateTable : Migration
+    public partial class j2tw : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -86,6 +86,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    PostalCode = table.Column<string>(type: "text", nullable: false),
                     NIN = table.Column<string>(type: "text", nullable: false),
                     DateOfBirth = table.Column<string>(type: "text", nullable: false),
                     Document = table.Column<string>(type: "text", nullable: false),

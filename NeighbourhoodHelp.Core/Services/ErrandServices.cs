@@ -7,6 +7,7 @@ using NeighbourhoodHelp.Core.IServices;
 using NeighbourhoodHelp.Data.IRepository;
 using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Model.DTOs;
+using NeighbourhoodHelp.Model.Entities;
 
 namespace NeighbourhoodHelp.Core.Services
 {
@@ -18,6 +19,12 @@ namespace NeighbourhoodHelp.Core.Services
         {
             _errandRepository = errandRepository;
         }
+
+        public async Task<Agent> CreateErrand(CreateErrandDto errandDto)
+        {
+            return await _errandRepository.CreateErrand(errandDto);
+        }
+
         public async Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdServiceAsync(Guid userId, PaginationParameters paginParams)
         {
             return await _errandRepository.GetAllErrandsByAppUserIdAsync(userId, paginParams);
@@ -26,6 +33,12 @@ namespace NeighbourhoodHelp.Core.Services
         public async Task<IList<GetErrandDto>> GetAllErrandsByAgentIdServiceAsync(Guid agentId, PaginationParameters paginParams)
         {
             return await _errandRepository.GetAllErrandsByAgentIdAsync(agentId, paginParams);
+        }
+
+        public async Task<ErrandDto> GetPendingErrandByAgentId(Guid agentId)
+        {
+            // Add any business logic or validation here if needed
+            return await _errandRepository.GetPendingErrandByAgentId(agentId);
         }
     }
 }

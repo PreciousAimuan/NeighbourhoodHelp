@@ -29,6 +29,7 @@ namespace NeighbourhoodHelp.Api
 
             builder.Services.AddScoped<IAgentRepository, AgentRepository>();
            builder.Services.AddScoped<IAgentServices, AgentServices>();
+           builder.Services.AddScoped<ICloudService, CloudService>();
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -39,6 +40,7 @@ namespace NeighbourhoodHelp.Api
             builder.Services.AddScoped<IErrandRepository, ErrandRepository>();
             builder.Services.AddScoped<IAgentRepository, AgentRepository>();
             builder.Services.AddScoped<IAgentServices, AgentServices>();
+            builder.Services.AddScoped<IErrandServices, ErrandServices>();
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

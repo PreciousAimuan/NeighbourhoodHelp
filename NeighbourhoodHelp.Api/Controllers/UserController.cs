@@ -15,12 +15,12 @@ namespace NeighbourhoodHelp.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("user-sign-up")]
-        public async Task<IActionResult> SignUp([FromForm] SignUpDto userSignUpDto)
+        [HttpPost("sign-up")]
+        public async Task<IActionResult> SignUp([FromForm] SignUpDto signUpDto)
         {
-            var newUser = await _userService.UserSignUpAsync(userSignUpDto);
-
-            return Ok("Sign Up Successful. Please Check your email for an OTP");
+            var newUser = await _userService.UserSignUpAsync(signUpDto);
+            
+            return Ok(newUser);
         }
         [HttpGet("get-user-by-errandId")]
         public async Task<IActionResult> GetUserByErrandId(Guid errandId)
@@ -45,7 +45,27 @@ namespace NeighbourhoodHelp.Api.Controllers
             return Ok(verifyOtpCode);
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var forgotPwdToken = await _userService.ForgotPassword(email);
 
+            return Ok(forgotPwdToken);
+        }
 
+        [HttpPatch("reset-password")]
+        public async Task<IActionResult> ResetPassword(string email, string token, string newPassword)
+        {
+            var resetPwdStatus = await _userService.ResetPassword(email, token, newPassword);
+
+            return Ok(resetPwdStatus);
+        }
+
+        [HttpPatch("Update-Users-Profile")]
+        public async Task<IActionResult> UpdateUserProfile(Guid id, UpdateUserProfileDto userProfileDto)
+        {
+            var updateUser = await _userService.UpdateUserProfile(id, userProfileDto);
+            return Ok(updateUser);
+        }
     }
 }

@@ -12,6 +12,7 @@ using NeighbourhoodHelp.Model.Entities;
 using System;
 using NeighbourhoodHelp.Core.IServices;
 using NeighbourhoodHelp.Core.Services;
+using System.Text.Json.Serialization;
 
 namespace NeighbourhoodHelp.Api
 {
@@ -42,7 +43,10 @@ namespace NeighbourhoodHelp.Api
             builder.Services.AddScoped<IAgentServices, AgentServices>();
             builder.Services.AddScoped<IErrandServices, ErrandServices>();
 
-
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();

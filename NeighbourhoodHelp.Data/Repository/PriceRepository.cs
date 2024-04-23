@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿/*using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using NeighbourhoodHelp.Data.IRepository;
 using NeighbourhoodHelp.Model.DTOs;
@@ -31,7 +31,7 @@ namespace NeighbourhoodHelp.Data.Repository
         }
 
         // Assign the errand to the agent
-        var agent = await _context.agents.FirstOrDefaultAsync(a => a.AppUser.ErrandId == request.ErrandId); /*user that made a request matches an agent that is a user*/
+        var agent = await _context.agents.FirstOrDefaultAsync(a => a.AppUser.ErrandId == request.ErrandId); *//*user that made a request matches an agent that is a user*//*
 
         if (agent != null)
         {
@@ -114,7 +114,7 @@ namespace NeighbourhoodHelp.Data.Repository
         }
 
         // Assign the errand to the agent
-        var agent = await _context.agents.FirstOrDefaultAsync(a => a.AppUser.ErrandId == request.ErrandId); /*user that made a request matches an agent that is a user*/
+        var agent = await _context.agents.FirstOrDefaultAsync(a => a.AppUser.ErrandId == request.ErrandId); *//*user that made a request matches an agent that is a user*//*
 
         if (agent != null)
         {
@@ -188,4 +188,4 @@ namespace NeighbourhoodHelp.Data.Repository
     }
 
 }
-}
+}*/

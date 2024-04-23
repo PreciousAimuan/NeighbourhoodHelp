@@ -21,6 +21,6 @@ namespace NeighbourhoodHelp.Model.Entities
         [JsonIgnore]
         public AppUser AppUser { get; set; }
 
-        public IList<Errand> Errands { get; set; }
+        public IList<Errand>Errands { get; set; }
     }
 }

@@ -86,7 +86,8 @@ namespace NeighbourhoodHelp.Data.Repository
                 return new CompleteSignUpDto
                 {
                     UserId = appUser.Id,
-                    Message = $"Role is {appUser.Role}"
+                    Message = $"Role is {appUser.Role}",
+                    Email = appUser.Email
                 };
         }
         

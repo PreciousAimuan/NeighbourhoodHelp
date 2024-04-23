@@ -16,7 +16,7 @@ namespace NeighbourhoodHelp.Api.Controllers
         }
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUp([FromForm] SignUpDto signUpDto)
+        public async Task<IActionResult> SignUp([FromBody] SignUpDto signUpDto)
         {
             var newUser = await _userService.UserSignUpAsync(signUpDto);
             

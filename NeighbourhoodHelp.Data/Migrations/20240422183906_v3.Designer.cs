@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240421180239_newUpdate")]
-    partial class newUpdate
+    [Migration("20240422183906_v3")]
+    partial class v3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,6 +226,10 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ErrandId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -421,6 +425,9 @@ namespace NeighbourhoodHelp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ErrandId")
+                        .IsUnique();
+
                     b.ToTable("Payments");
                 });
 
@@ -503,9 +510,13 @@ namespace NeighbourhoodHelp.Data.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Agent", b =>
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Payment", b =>
                 {
-                    b.Navigation("Errands");
+                    b.HasOne("NeighbourhoodHelp.Model.Entities.Errand", null)
+                        .WithOne("Payment")
+                        .HasForeignKey("NeighbourhoodHelp.Model.Entities.Payment", "ErrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Agent", b =>
@@ -516,6 +527,12 @@ namespace NeighbourhoodHelp.Data.Migrations
             modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.AppUser", b =>
                 {
                     b.Navigation("Errands");
+                });
+
+            modelBuilder.Entity("NeighbourhoodHelp.Model.Entities.Errand", b =>
+                {
+                    b.Navigation("Payment")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

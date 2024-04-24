@@ -9,6 +9,6 @@ namespace NeighbourhoodHelp.Model.DTOs
     public class PriceNegotiationDto
     {
         public decimal CounterPrice { get; set; }
-        public int ErrandId { get; set; }
+        public Guid ErrandId { get; set; }
     }
 }

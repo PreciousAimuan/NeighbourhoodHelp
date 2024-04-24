@@ -19,8 +19,8 @@ namespace NeighbourhoodHelp.Model.Entities
         public string Document { get; set; } = string.Empty;
 
         [JsonIgnore]
+        public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
-
-        public IList<Errand>Errands { get; set; }
+        public IList<Errand> Errands { get; set; }
     }
 }

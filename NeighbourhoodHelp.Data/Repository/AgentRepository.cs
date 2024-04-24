@@ -29,14 +29,14 @@ namespace NeighbourhoodHelp.Data.Repository
 
         public async Task<string> CreateAgentAsync(string id, CreateAgentDto agentDto)
         {
-            var existingUser = await _context.appUsers.FirstOrDefaultAsync(a => a.Id == id);
+            var existingUser = await _context.appUsers.FirstOrDefaultAsync(a => a.Id.Equals(id));
             if (existingUser == null)
             {
                 return null;
             }
 
             var doc = await _cloudService.AddDocumentAsync(agentDto.Document);
-            
+            /*var newAgent = _mapper.Map<Agent>(agentDto);*/
             var newAgent = new Agent
             {
                 NIN = agentDto.NIN,
@@ -44,6 +44,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 DateOfBirth = agentDto.DateOfBirth,
                 Document = doc.Url.ToString(),
                 AppUser = existingUser,
+                CreatedAt = DateTime.Now
             };
 
             _context.agents.Add(newAgent);
@@ -147,8 +148,6 @@ namespace NeighbourhoodHelp.Data.Repository
             await _context.SaveChangesAsync();
             return ("Updated Successfully");
         }
-
-       
     }
 }
 

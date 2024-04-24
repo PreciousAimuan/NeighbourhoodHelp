@@ -17,6 +17,5 @@ namespace NeighbourhoodHelp.Model.DTOs
         public string Email { get; set; }
         public string ErrandId { get; set; }
         public string PhoneNumber { get; set; }
-      
     }
 }

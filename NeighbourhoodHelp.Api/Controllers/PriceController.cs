@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NeighbourhoodHelp.Core.IServices;
 using NeighbourhoodHelp.Model.DTOs;
+using NeighbourhoodHelp.Model.Entities;
 
 namespace NeighbourhoodHelp.Api.Controllers
 {
@@ -16,10 +17,10 @@ namespace NeighbourhoodHelp.Api.Controllers
             _priceService = priceService;
         }
 
-        [HttpPost("agent/accept")]
-        public async Task<IActionResult> AgentAcceptPrice(AgentDto request)
+        [HttpPost("agent-accept-price")]
+        public async Task<IActionResult> AgentAcceptPrice(Guid errandId)
         {
-            var result = await _priceService.AgentAcceptPrice(request);
+            var result = await _priceService.AgentAcceptPrice(errandId);
             return Ok(new { message = result });
         }
 
@@ -31,16 +32,16 @@ namespace NeighbourhoodHelp.Api.Controllers
         }
 
         [HttpPost("agent/decline")]
-        public async Task<IActionResult> AgentDeclinePrice(AgentDto request)
+        public async Task<IActionResult> AgentDeclinePrice(Guid errandId)
         {
-            var result = await _priceService.AgentDeclinePrice(request);
+            var result = await _priceService.AgentDeclinePrice(errandId);
             return Ok(new { message = result });
         }
 
         [HttpPost("user/accept")]
-        public async Task<IActionResult> UserAcceptPrice(AgentDto request)
+        public async Task<IActionResult> UserAcceptPrice(Guid errandId)
         {
-            var result = await _priceService.UserAcceptPrice(request);
+            var result = await _priceService.UserAcceptPrice(errandId);
             return Ok(new { message = result });
         }
 
@@ -52,9 +53,9 @@ namespace NeighbourhoodHelp.Api.Controllers
         }
 
         [HttpPost("user/decline")]
-        public async Task<IActionResult> UserDeclinePrice(AgentDto request)
+        public async Task<IActionResult> UserDeclinePrice(Guid errandId)
         {
-            var result = await _priceService.UserDeclinePrice(request);
+            var result = await _priceService.UserDeclinePrice(errandId);
             return Ok(new { message = result });
         }
     }

@@ -161,6 +161,7 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -484,7 +485,9 @@ namespace NeighbourhoodHelp.Data.Migrations
                 {
                     b.HasOne("NeighbourhoodHelp.Model.Entities.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
                 });

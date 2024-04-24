@@ -123,26 +123,13 @@ namespace NeighbourhoodHelp.Data.Repository
 
         }
 
-        public async Task<ErrandDto> GetPendingErrandByAgentId(Guid agentId)
+        public async Task<PendingErrandDto> GetPendingErrandByAgentId(Guid agentId)
         {
             var pendingErrand = await _context.Errands
                 .Include(e => e.Agent)
                 .FirstOrDefaultAsync(e => e.Agent.Id == agentId);
-            var ErrandsDetail = _mapper.Map<ErrandDto>(pendingErrand);
+            var ErrandsDetail = _mapper.Map<PendingErrandDto>(pendingErrand);
             return ErrandsDetail;
         }
     }
 }
-/*var existingUser = await _context.AppUsers.FirstOrDefaultAsync(e => e.Email == appUserDto.Email);
-           if (existingUser != null)
-           {
-               return "User already exist";
-           }*/
-
-
-/*if (saveChanges > 0)
-{
-    return "Errand created Successfully";
-}*/
-
-// return "User could not be added";

@@ -27,6 +27,19 @@ namespace NeighbourhoodHelp.Infrastructure.AutoMapper
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email)); // Assuming Email is used as the username
             */
             // Add more mappings if needed
+            CreateMap<PriceNegotiation, PriceNegotiationDto>();
+            CreateMap<AppUser, AppUserDto>();
+            CreateMap<AppUser, AgentDto>();
+            CreateMap<Agent, AgentDto>();
+            CreateMap<Errand, PendingErrandDto>();
+                /*.ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State))
+                .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.PostalCode))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))*/
+                // If you have additional properties that match between Errand and ErrandDto, 
+                // you can map them here as well.
+                ;
         }
     }
 }

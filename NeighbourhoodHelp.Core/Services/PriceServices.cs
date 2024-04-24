@@ -18,10 +18,10 @@ namespace NeighbourhoodHelp.Core.Services
             _priceRepository = priceRepository;
         }
 
-        public async Task<AgentDto> AgentAcceptPrice(AgentDto request)
+        public async Task<AgentDto> AgentAcceptPrice(Guid errandId)
         {
             // Add any business logic or validation here if needed
-            return await _priceRepository.AgentAcceptPrice(request);
+            return await _priceRepository.AgentAcceptPrice(errandId);
         }
 
         public async Task<string> AgentCounterPrice(PriceNegotiationDto request)
@@ -30,16 +30,16 @@ namespace NeighbourhoodHelp.Core.Services
             return await _priceRepository.AgentCounterPrice(request);
         }
 
-        public async Task<AgentDto> AgentDeclinePrice(AgentDto request)
+        public async Task<AgentDto> AgentDeclinePrice(Guid errandId)
         {
             // Add any business logic or validation here if needed
-            return await _priceRepository.AgentDeclinePrice(request);
+            return await _priceRepository.AgentDeclinePrice(errandId);
         }
 
-        public async Task<AgentDto> UserAcceptPrice(AgentDto request)
+        public async Task<AgentDto> UserAcceptPrice(Guid errandId)
         {
             // Add any business logic or validation here if needed
-            return await _priceRepository.UserAcceptPrice(request);
+            return await _priceRepository.UserAcceptPrice(errandId);
         }
 
         public async Task<string> UserCounterPrice(PriceNegotiationDto request)
@@ -48,10 +48,10 @@ namespace NeighbourhoodHelp.Core.Services
             return await _priceRepository.UserCounterPrice(request);
         }
 
-        public async Task<AgentDto> UserDeclinePrice(AgentDto request)
+        public async Task<AgentDto> UserDeclinePrice(Guid errandId)
         {
             // Add any business logic or validation here if needed
-            return await _priceRepository.UserDeclinePrice(request);
+            return await _priceRepository.UserDeclinePrice(errandId);
         }
     }
 }

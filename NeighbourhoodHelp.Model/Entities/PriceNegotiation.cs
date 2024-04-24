@@ -7,7 +7,7 @@ namespace NeighbourhoodHelp.Model.Entities
     {
         public AgentResponse AgentResponse { get; set; }
         public decimal CounterPrice { get; set; }
-        public int ErrandId { get; set; }
+        public Guid ErrandId { get; set; }
         public Errand Errand { get; set; }
         public Guid AppUserId { get; set; }
         public AppUser AppUser { get; set; }

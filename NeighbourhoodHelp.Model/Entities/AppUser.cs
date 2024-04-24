@@ -17,7 +17,7 @@ namespace NeighbourhoodHelp.Model.Entities
 
         public string Otp { get; set; } = string.Empty;
 
-        public string ErrandId { get; set; }
+  /*    public string ErrandId { get; set; } = string.Empty;*/
        
         public IList<Errand> Errands { get; set; }
     }

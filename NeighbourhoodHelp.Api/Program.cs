@@ -10,9 +10,9 @@ using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Infrastructure.Services;
 using NeighbourhoodHelp.Model.Entities;
 using System;
+using System.Text.Json.Serialization;
 using NeighbourhoodHelp.Core.IServices;
 using NeighbourhoodHelp.Core.Services;
-using System.Text.Json.Serialization;
 
 namespace NeighbourhoodHelp.Api
 {
@@ -34,7 +34,15 @@ namespace NeighbourhoodHelp.Api
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-            builder.Services.AddControllers();
+            //builder.Services.AddControllers();
+           
+            builder.Services.AddControllers().AddJsonOptions(options =>
+
+            {
+
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+
+            });
 
 
             //Addidng of services
@@ -42,11 +50,10 @@ namespace NeighbourhoodHelp.Api
             builder.Services.AddScoped<IAgentRepository, AgentRepository>();
             builder.Services.AddScoped<IAgentServices, AgentServices>();
             builder.Services.AddScoped<IErrandServices, ErrandServices>();
+            builder.Services.AddScoped<IPriceServices, PriceServices>();
+            builder.Services.AddScoped<IPriceRepository, PriceRepository>();
 
-            builder.Services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();

@@ -16,7 +16,7 @@ namespace NeighbourhoodHelp.Data.IRepository
         Task<Agent> CreateErrand(CreateErrandDto createErrand);
         Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdAsync(Guid userId, PaginationParameters paginParams);
         Task<IList<GetErrandDto>> GetAllErrandsByAgentIdAsync(Guid agentId, PaginationParameters paginParams);
-        Task<ErrandDto> GetPendingErrandByAgentId(Guid agentId);
+        Task<PendingErrandDto> GetPendingErrandByAgentId(Guid agentId);
 
     }
 }

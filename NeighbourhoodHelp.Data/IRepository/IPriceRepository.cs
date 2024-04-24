@@ -6,11 +6,11 @@ namespace NeighbourhoodHelp.Data.IRepository
 {
     public interface IPriceRepository
     {
-        Task<AgentDto> AgentAcceptPrice(AgentDto request);
+        Task<AgentDto> AgentAcceptPrice(Guid errandId);
         Task<string> AgentCounterPrice(PriceNegotiationDto request);
-        Task<AgentDto> AgentDeclinePrice(AgentDto request);
-        Task<AgentDto> UserAcceptPrice(AgentDto request);
+        Task<AgentDto> AgentDeclinePrice(Guid errandId);
+        Task<AgentDto> UserAcceptPrice(Guid errandId);
         Task<string> UserCounterPrice(PriceNegotiationDto request);
-        Task<AgentDto> UserDeclinePrice(AgentDto request);
+        Task<AgentDto> UserDeclinePrice(Guid errandId);
     }
 }

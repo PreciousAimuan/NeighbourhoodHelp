@@ -35,7 +35,7 @@ namespace NeighbourhoodHelp.Core.Services
             return await _errandRepository.GetAllErrandsByAgentIdAsync(agentId, paginParams);
         }
 
-        public async Task<ErrandDto> GetPendingErrandByAgentId(Guid agentId)
+        public async Task<PendingErrandDto> GetPendingErrandByAgentId(Guid agentId)
         {
             // Add any business logic or validation here if needed
             return await _errandRepository.GetPendingErrandByAgentId(agentId);

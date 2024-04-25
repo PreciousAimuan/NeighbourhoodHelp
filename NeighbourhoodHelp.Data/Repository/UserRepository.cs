@@ -133,7 +133,8 @@ namespace NeighbourhoodHelp.Data.Repository
             {
                 token = token,
                 email = loginDto.Email,
-                role = role
+                role = role,
+                id = user.Id
             };
 
             //return

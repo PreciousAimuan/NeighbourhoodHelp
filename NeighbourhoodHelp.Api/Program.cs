@@ -93,7 +93,7 @@ namespace NeighbourhoodHelp.Api
                 options.AddPolicy("AllowSpecificOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("http://example.com")
+                        builder.WithOrigins("http://localhost:3000")
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });

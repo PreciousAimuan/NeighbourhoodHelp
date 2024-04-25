@@ -4,8 +4,6 @@ namespace NeighbourhoodHelp.Model.Entities
 {
     public class AppUser : IdentityUser
     {
-        
-
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PostalCode { get; set; } = String.Empty;
@@ -17,7 +15,7 @@ namespace NeighbourhoodHelp.Model.Entities
 
         public string Otp { get; set; } = string.Empty;
 
-  /*    public string ErrandId { get; set; } = string.Empty;*/
+       // public string ErrandId { get; set; }
        
         public IList<Errand> Errands { get; set; }
     }

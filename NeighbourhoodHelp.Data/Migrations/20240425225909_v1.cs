@@ -6,11 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace NeighbourhoodHelp.Data.Migrations
 {
-<<<<<<<< HEAD:NeighbourhoodHelp.Data/Migrations/20240423180936_InitialTable.cs
-    public partial class InitialTable : Migration
-========
-    public partial class j2tw : Migration
->>>>>>>> 9f9b9736fef57ee5b3f4cb731370a74033b38f7f:NeighbourhoodHelp.Data/Migrations/20240421130616_j2tw.cs
+    public partial class v1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

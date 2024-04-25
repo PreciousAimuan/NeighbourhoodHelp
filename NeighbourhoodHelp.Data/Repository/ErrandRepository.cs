@@ -46,7 +46,6 @@ namespace NeighbourhoodHelp.Data.Repository
             var newErrand = new Errand
             {
                 ItemName = createErrand.ItemName,
-                Description = createErrand.Description,
                 State = createErrand.State,
                 City = createErrand.City,
                 Street = createErrand.Street,

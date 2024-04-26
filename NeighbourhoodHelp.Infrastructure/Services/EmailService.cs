@@ -100,5 +100,27 @@ namespace NeighbourhoodHelp.Infrastructure.Services
 
             return body;
         }
+
+        public async Task SendEmailToAgentForErrandCreated(EmailDto emailToAgentDto)
+        {
+            
+            // For example, if you're using SMTP, you can use the code you provided earlier
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Neighbourhood Help", _config["EmailSettings:Username"]));
+            message.To.Add(new MailboxAddress("", emailToAgentDto.To));
+            message.Subject = emailToAgentDto.Subject;
+            message.Body = new TextPart("plain")
+            {
+                Text = emailToAgentDto.Body
+            };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_config["EmailSettings:Host"], 587, false);
+                await client.AuthenticateAsync(_config["EmailSettings:Username"], _config["EmailSettings:Password"]);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
     }
 }

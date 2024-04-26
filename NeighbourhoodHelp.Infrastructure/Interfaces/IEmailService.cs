@@ -11,5 +11,6 @@ namespace NeighbourhoodHelp.Infrastructure.Interfaces
     {
         Task SendEmailAsync(EmailDto emailDto);
         Task SendForgotPasswordEmailAsync(EmailDto request);
+        Task SendEmailToAgentForErrandCreated(EmailDto createErrandDto);
     }
 }

@@ -63,6 +63,27 @@ namespace NeighbourhoodHelp.Data.Repository
             _context.Errands.Add(newErrand);
             await _context.SaveChangesAsync();
 
+            var emailToAgent = new EmailDto
+            {
+                To = randomAgent.AppUser.Email,
+                Subject = "New Errand Assigned",
+                Body = $"You have been assigned a new errand:\n\n" +
+              $"Errand Details:\n" +
+              $"Item: {createErrand.ItemName}\n" +
+              $"Description: {createErrand.Note}\n" +
+              $"Location: {createErrand.City}, {createErrand.State}, {createErrand.PostalCode}\n" +
+              $"Date: {createErrand.Date}, Time: {createErrand.Time}\n\n" +
+              $"Please contact the app user for further details.\n"
+            };
+
+            await _emailService.SendEmailToAgentForErrandCreated(emailToAgent);
+
+            // Send agent details to the user as a string
+            var agentDetailsToUser = $"Assigned Agent Details:\n" +
+                                     $"Name: {randomAgent.AppUser.FirstName} {randomAgent.AppUser.LastName}\n" +
+                                     $"Phone Number: {randomAgent.AppUser.PhoneNumber}\n" +
+                                     $"Email: {randomAgent.AppUser.Email}\n";
+
             return randomAgent;
         }
 

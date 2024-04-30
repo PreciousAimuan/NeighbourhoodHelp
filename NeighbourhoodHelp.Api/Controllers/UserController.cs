@@ -16,7 +16,7 @@ namespace NeighbourhoodHelp.Api.Controllers
         }
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUp([FromForm] SignUpDto signUpDto)
+        public async Task<IActionResult> SignUp([FromBody] SignUpDto signUpDto)
         {
             var newUser = await _userService.UserSignUpAsync(signUpDto);
             
@@ -62,10 +62,32 @@ namespace NeighbourhoodHelp.Api.Controllers
         }
 
         [HttpPatch("Update-Users-Profile")]
-        public async Task<IActionResult> UpdateUserProfile(Guid id, UpdateUserProfileDto userProfileDto)
+        public async Task<IActionResult> UpdateUserProfile( string id, [FromForm] UpdateUserProfileDto userProfileDto)
         {
+            /* var updateUser = await _userService.UpdateUserProfile(id, userProfileDto);
+             return Ok(updateUser);*/
+
+            if (string.IsNullOrEmpty(id)) // Check if id is provided
+            {
+                return BadRequest("User id is required."); // Return a bad request if id is not provided
+            }
+
             var updateUser = await _userService.UpdateUserProfile(id, userProfileDto);
+            if (updateUser == null)
+            {
+                return NotFound("User not found."); // Return not found if user with provided id doesn't exist
+            }
+
             return Ok(updateUser);
         }
+
+        [HttpGet("Get-User-Details")]
+        public async Task<IActionResult> GetUserDetailsByUserId(string userId)
+        {
+            var userDetails = await _userService.GetUserDetailsByUserId(userId);
+            return Ok(userDetails);
+
+        }
+
     }
 }

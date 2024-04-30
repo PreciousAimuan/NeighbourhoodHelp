@@ -1,13 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using NeighbourhoodHelp.Model.DTOs;
-using NeighbourhoodHelp.Model.Entities;
+﻿using NeighbourhoodHelp.Model.DTOs;
 
 namespace NeighbourhoodHelp.Data.IRepository
 {
@@ -19,7 +10,8 @@ namespace NeighbourhoodHelp.Data.IRepository
         Task<string> ForgotPassword(string email);
         Task<string> ResetPassword(string email, string token, string newPassword);
         Task<bool> VerifyOtpAsync(string email, string otp);
-        Task<string> UpdateUserProfile(Guid Id, UpdateUserProfileDto userProfileDto);
+        Task<string> UpdateUserProfile(string Id, UpdateUserProfileDto userProfileDto);
+        Task<GetUserByIdDto> GetUserDetailsByUserId(string userId);
       
     }
 }

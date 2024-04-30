@@ -225,29 +225,69 @@ namespace NeighbourhoodHelp.Data.Repository
             return false; // OTP verification failed
         }
 
-        public async Task<string> UpdateUserProfile(Guid id, UpdateUserProfileDto userProfileDto)
+        public async Task<string> UpdateUserProfile(string id, UpdateUserProfileDto userProfileDto)
         {
             var existingUser = await _context.appUsers.FirstOrDefaultAsync(x => x.Id.Equals(id));
 
-            var picture = await _cloudService.AddPhotoAsync(userProfileDto.Image);
             if (existingUser == null)
+            {
+                return null; // or throw an exception, return BadRequest, etc.
+            }
+
+
+            string pictureUrl = existingUser.Image;
+            if (userProfileDto.Image != null)
+            {
+                var picture = await _cloudService.AddPhotoAsync(userProfileDto.Image);
+                pictureUrl = picture.Url.ToString();
+            }
+
+            // Update user fields
+            existingUser.FirstName = userProfileDto.FirstName ?? existingUser.FirstName;
+            existingUser.LastName = userProfileDto.LastName ?? existingUser.LastName;
+            existingUser.Email = userProfileDto.Email ?? existingUser.Email;
+            existingUser.PostalCode = userProfileDto.PostalCode ?? existingUser.PostalCode;
+            existingUser.PhoneNumber = userProfileDto.PhoneNumber ?? existingUser.PhoneNumber;
+          /*  existingUser.Image = pictureUrl;*/
+            existingUser.State = userProfileDto.State ?? existingUser.State;
+            existingUser.City = userProfileDto.City ?? existingUser.City;
+            existingUser.Street = userProfileDto.Street ?? existingUser.Street;
+
+            if (userProfileDto.Image != null)
+            {
+                existingUser.Image = pictureUrl;
+            }
+
+            await _context.SaveChangesAsync();
+            return "Updated Successfully";
+        }
+         
+                    
+
+        
+
+        public async Task<GetUserByIdDto> GetUserDetailsByUserId(string userId)
+        {
+            var user = await _context.appUsers.FirstOrDefaultAsync(x => x.Id.Equals(userId));
+
+            if (user == null)
             {
                 return null;
             }
-            existingUser.FirstName = userProfileDto.FirstName;
-            existingUser.LastName = userProfileDto.LastName;
-            existingUser.Email = userProfileDto.Email;
-            existingUser.PostalCode = userProfileDto.PostalCode;
-            existingUser.PhoneNumber = userProfileDto.PhoneNumber;
-            existingUser.Image = picture.Url.ToString();
-            existingUser.State = userProfileDto.State;
-            existingUser.City = userProfileDto.City;
-            existingUser.Street = userProfileDto.Street;
 
-            await _context.SaveChangesAsync();
-            return ("Updated Successfully");
-
+            var userDetails = new GetUserByIdDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                PostalCode = user.PostalCode,
+                Image = user.Image,
+                Street = user.Street,
+                City = user.City,
+                State = user.State
+            };
+            return userDetails;
         }
-
     }
 }

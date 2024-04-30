@@ -55,9 +55,13 @@ namespace NeighbourhoodHelp.Core.Services
             return await _userRepository.VerifyOtpAsync(email, otp);
         }
 
-        public async Task<string> UpdateUserProfile(Guid id, UpdateUserProfileDto userProfileDto)
+        public async Task<string> UpdateUserProfile(string id, UpdateUserProfileDto userProfileDto)
         {
             return await _userRepository.UpdateUserProfile(id, userProfileDto);
+        }
+        public async Task<GetUserByIdDto> GetUserDetailsByUserId(string userId)
+        {
+            return await _userRepository.GetUserDetailsByUserId(userId);
         }
     }
 }

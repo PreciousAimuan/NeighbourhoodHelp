@@ -44,7 +44,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 DateOfBirth = agentDto.DateOfBirth,
                 Document = doc.Url.ToString(),
                 AppUser = existingUser,
-                CreatedAt = DateTime.Now
+                
             };
 
             _context.agents.Add(newAgent);
@@ -52,6 +52,7 @@ namespace NeighbourhoodHelp.Data.Repository
 
             return "Successful";
         }
+
 
         public async Task<ErrandDto> GetAgentByErrandIdAsync(Guid errandId)
         {

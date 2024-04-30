@@ -89,5 +89,19 @@ namespace NeighbourhoodHelp.Api.Controllers
 
         }
 
+        [HttpGet("Get-All-Users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                var users = await _userService.GetAllUsers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+        }
     }
 }

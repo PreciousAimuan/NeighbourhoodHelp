@@ -13,5 +13,7 @@ namespace NeighbourhoodHelp.Data.IRepository
         Task<string> UpdateUserProfile(string Id, UpdateUserProfileDto userProfileDto);
         Task<GetUserByIdDto> GetUserDetailsByUserId(string userId);
       
+    
+        Task<List<GetAppUserDto>> GetAllUsers();
     }
 }

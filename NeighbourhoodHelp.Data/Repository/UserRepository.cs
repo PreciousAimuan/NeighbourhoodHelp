@@ -275,6 +275,8 @@ namespace NeighbourhoodHelp.Data.Repository
                 return null;
             }
 
+
+        
             var userDetails = new GetUserByIdDto
             {
                 FirstName = user.FirstName,
@@ -288,6 +290,13 @@ namespace NeighbourhoodHelp.Data.Repository
                 State = user.State
             };
             return userDetails;
+        }
+        public async Task<List<GetAppUserDto>> GetAllUsers()
+        {
+            var users = await _context.appUsers.ToListAsync();
+            return _mapper.Map<List<GetAppUserDto>>(users);
+
+
         }
     }
 }

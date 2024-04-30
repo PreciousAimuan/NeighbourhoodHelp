@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240425225909_v1")]
+    [Migration("20240426171546_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -327,10 +327,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Date")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 

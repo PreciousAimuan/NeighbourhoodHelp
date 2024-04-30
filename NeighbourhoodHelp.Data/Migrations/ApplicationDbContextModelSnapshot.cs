@@ -328,10 +328,6 @@ namespace NeighbourhoodHelp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("ErrandStatus")
                         .HasColumnType("integer");
 

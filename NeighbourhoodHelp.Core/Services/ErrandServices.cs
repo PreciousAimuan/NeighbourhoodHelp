@@ -20,7 +20,7 @@ namespace NeighbourhoodHelp.Core.Services
             _errandRepository = errandRepository;
         }
 
-        public async Task<Agent> CreateErrand(CreateErrandDto errandDto)
+        public async Task<ErrandAssignmentDto> CreateErrand(CreateErrandDto errandDto)
         {
             return await _errandRepository.CreateErrand(errandDto);
         }

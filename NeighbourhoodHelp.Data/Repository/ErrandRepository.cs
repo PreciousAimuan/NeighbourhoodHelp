@@ -27,7 +27,7 @@ namespace NeighbourhoodHelp.Data.Repository
             _emailService = emailService;
         }
 
-        public async Task<Agent> CreateErrand(CreateErrandDto createErrand)
+        public async Task<ErrandAssignmentDto> CreateErrand(CreateErrandDto createErrand)
         {
             var agentsWithMatchingPostalCode = _context.agents
                 .Include(a => a.AppUser)
@@ -78,15 +78,21 @@ namespace NeighbourhoodHelp.Data.Repository
 
             await _emailService.SendEmailToAgentForErrandCreated(emailToAgent);
 
-            // Send agent details to the user as a string
             var agentDetailsToUser = $"Assigned Agent Details:\n" +
                                      $"Name: {randomAgent.AppUser.FirstName} {randomAgent.AppUser.LastName}\n" +
                                      $"Phone Number: {randomAgent.AppUser.PhoneNumber}\n" +
                                      $"Email: {randomAgent.AppUser.Email}\n";
 
-            return randomAgent;
-        }
+            var userCreatingErrand = await _context.Users.FirstOrDefaultAsync(u => u.Id == createErrand.UserId);
 
+            var result = new ErrandAssignmentDto
+            {
+                User = userCreatingErrand,
+                Agent = randomAgent
+            };
+
+            return result;
+        }
         public async Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdAsync(Guid userId, PaginationParameters paginParams)
         {
             try

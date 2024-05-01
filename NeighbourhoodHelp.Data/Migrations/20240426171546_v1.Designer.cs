@@ -12,8 +12,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NeighbourhoodHelp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:NeighbourhoodHelp.Data/Migrations/20240426171546_v1.Designer.cs
     [Migration("20240426171546_v1")]
     partial class v1
+========
+    [Migration("20240428182302_ugochi")]
+    partial class ugochi
+>>>>>>>> f5d6fe04b1ec917ddcd448a1dbd6977d00cf16a1:NeighbourhoodHelp.Data/Migrations/20240428182302_ugochi.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

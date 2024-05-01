@@ -11,7 +11,7 @@ namespace NeighbourhoodHelp.Core.IServices
 {
     public interface IErrandServices
     {
-        Task<Agent> CreateErrand(CreateErrandDto errandDto);
+        Task<ErrandAssignmentDto> CreateErrand(CreateErrandDto errandDto);
         Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdServiceAsync(Guid userId, PaginationParameters paginParams);
         Task<IList<GetErrandDto>> GetAllErrandsByAgentIdServiceAsync(Guid agentId, PaginationParameters paginParams);
         Task<PendingErrandDto> GetPendingErrandByAgentId(Guid agentId);

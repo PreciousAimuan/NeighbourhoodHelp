@@ -24,7 +24,7 @@ namespace NeighbourhoodHelp.Core.Services
             return await _priceRepository.AgentAcceptPrice(errandId);
         }
 
-        public async Task<string> AgentCounterPrice(PriceNegotiationDto request)
+        public async Task<PriceDto> AgentCounterPrice(PriceNegotiationDto request)
         {
             // Add any business logic or validation here if needed
             return await _priceRepository.AgentCounterPrice(request);
@@ -42,7 +42,7 @@ namespace NeighbourhoodHelp.Core.Services
             return await _priceRepository.UserAcceptPrice(errandId);
         }
 
-        public async Task<string> UserCounterPrice(PriceNegotiationDto request)
+        public async Task<PriceDto> UserCounterPrice(PriceNegotiationDto request)
         {
             // Add any business logic or validation here if needed
             return await _priceRepository.UserCounterPrice(request);

@@ -46,6 +46,10 @@ namespace NeighbourhoodHelp.Data.Repository
                 var agentDetail = _mapper.Map<AgentDto>(agent);
                 agentDetail.FirstName = appUser.FirstName;
                 agentDetail.LastName = appUser.LastName;
+                agentDetail.Email = appUser.Email;
+                agentDetail.PhoneNumber = appUser.PhoneNumber;
+                agentDetail.Price = errand.Price;
+
 
                 await _context.SaveChangesAsync(); // Save the changes to update isActive property
 
@@ -60,27 +64,37 @@ namespace NeighbourhoodHelp.Data.Repository
 
 
 
-        public async Task<string> AgentCounterPrice(PriceNegotiationDto request)
+        public async Task<PriceDto> AgentCounterPrice(PriceNegotiationDto request)
         {
             var errand = await _context.Errands.FindAsync(request.ErrandId);
 
             if (errand == null)
             {
-                return "Errand not found";
+                return null; /*"Errand not found"*/
             }
+
+            var agent = await _context.agents.FindAsync(errand.AgentId);
 
             if (errand.AgentCounterOffers < 2)
             {
+                var appUser = await _context.Users.FindAsync(agent.AppUserId);
+                var agentDetail = _mapper.Map<PriceDto>(agent);
+                agentDetail.FirstName = appUser.FirstName;
+                agentDetail.LastName = appUser.LastName;
+                agentDetail.Email = appUser.Email;
+                agentDetail.PhoneNumber = appUser.PhoneNumber;
+                agentDetail.Price = request.CounterPrice;
+
                 // Update price request on database
                 errand.Price = request.CounterPrice;
                 _context.Errands.Update(errand);
                 errand.AgentCounterOffers++;
                 await _context.SaveChangesAsync();
-                return "Counter offer made.";
+                return agentDetail;
             }
             else
             {
-                return "Agent has reached the maximum number of counteroffers.";
+                return null; 
             }
         }
 
@@ -111,7 +125,14 @@ namespace NeighbourhoodHelp.Data.Repository
             try
             {
                 var assignedAgent = await _agentRepository.AssignAgentAsync(errand);
+                var appUser = await _context.Users.FindAsync(assignedAgent.AppUserId);
                 var agentDetail = _mapper.Map<AgentDto>(assignedAgent); // Assuming assignedAgent is an Agent entity
+                agentDetail.FirstName = appUser.FirstName;
+                agentDetail.LastName = appUser.LastName;
+                agentDetail.Email = appUser.Email;
+                agentDetail.PhoneNumber = appUser.PhoneNumber;
+                agentDetail.Price = errand.Price;
+
                 await _context.SaveChangesAsync();
                 return agentDetail;
             }
@@ -147,6 +168,9 @@ namespace NeighbourhoodHelp.Data.Repository
                 var agentDetail = _mapper.Map<AgentDto>(agent);
                 agentDetail.FirstName = appUser.FirstName;
                 agentDetail.LastName = appUser.LastName;
+                agentDetail.Email = appUser.Email;
+                agentDetail.PhoneNumber = appUser.PhoneNumber;
+                agentDetail.Price = errand.Price;
 
                 await _context.SaveChangesAsync(); // Save the changes to update isActive property
 
@@ -160,26 +184,37 @@ namespace NeighbourhoodHelp.Data.Repository
 
 
 
-        public async Task<string> UserCounterPrice(PriceNegotiationDto request)
+        public async Task<PriceDto> UserCounterPrice(PriceNegotiationDto request)
         {
             var errand = await _context.Errands.FindAsync(request.ErrandId);
 
             if (errand == null)
             {
-                return "Errand not found";
+                return null; /*"Errand not found"*/
             }
 
-            if (errand.UserCounterOffers < 1)
+            var agent = await _context.agents.FindAsync(errand.AgentId);
+
+            if (errand.AgentCounterOffers < 2)
             {
+                var appUser = await _context.Users.FindAsync(agent.AppUserId);
+                var agentDetail = _mapper.Map<PriceDto>(agent);
+                agentDetail.FirstName = appUser.FirstName;
+                agentDetail.LastName = appUser.LastName;
+                agentDetail.Email = appUser.Email;
+                agentDetail.PhoneNumber = appUser.PhoneNumber;
+                agentDetail.Price = request.CounterPrice;
+
                 // Update price request on database
                 errand.Price = request.CounterPrice;
-                errand.UserCounterOffers++;
+                _context.Errands.Update(errand);
+                errand.AgentCounterOffers++;
                 await _context.SaveChangesAsync();
-                return "Counter offer made.";
+                return agentDetail;
             }
             else
             {
-                return "User has reached the maximum number of counteroffers.";
+                return null;
             }
         }
 
@@ -210,7 +245,14 @@ namespace NeighbourhoodHelp.Data.Repository
             try
             {
                 var assignedAgent = await _agentRepository.AssignAgentAsync(errand);
+                var appUser = await _context.Users.FindAsync(assignedAgent.AppUserId);
                 var agentDetail = _mapper.Map<AgentDto>(assignedAgent); // Assuming assignedAgent is an Agent entity
+                agentDetail.FirstName = appUser.FirstName;
+                agentDetail.LastName = appUser.LastName;
+                agentDetail.Email = appUser.Email;
+                agentDetail.PhoneNumber = appUser.PhoneNumber;
+                agentDetail.Price = errand.Price;
+
                 await _context.SaveChangesAsync();
                 return agentDetail;
             }
@@ -223,3 +265,4 @@ namespace NeighbourhoodHelp.Data.Repository
 
     }
 }
+

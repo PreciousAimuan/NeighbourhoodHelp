@@ -17,7 +17,7 @@ namespace NeighbourhoodHelp.Api.Controllers
             _priceService = priceService;
         }
 
-        [HttpPost("agent-accept-price")]
+        [HttpPost("agent/accept")]
         public async Task<IActionResult> AgentAcceptPrice(Guid errandId)
         {
             var result = await _priceService.AgentAcceptPrice(errandId);

@@ -37,6 +37,7 @@ namespace NeighbourhoodHelp.Infrastructure.AutoMapper
             CreateMap<AppUser, AppUserDto>();
             CreateMap<AppUser, AgentDto>();
             CreateMap<Agent, AgentDto>();
+            CreateMap<Agent, PriceDto>();
             CreateMap<Errand, PendingErrandDto>();
                 /*.ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))

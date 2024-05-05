@@ -14,7 +14,7 @@ namespace NeighbourhoodHelp.Model.DTOs
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string PostalCode { get; set; } = String.Empty;
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public string Street { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;

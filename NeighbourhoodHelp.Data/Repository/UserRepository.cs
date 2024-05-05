@@ -157,14 +157,14 @@ namespace NeighbourhoodHelp.Data.Repository
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             // Construct the password reset link with token
-            var resetLink = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
+            var resetLink = $"http://localhost:3000/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
 
             // You can send an email with the password reset link to the user
             var emailContent = new EmailDto
             {
                 To = email,
                 Subject = "Password Reset",
-                Body = $"https://yourwebsite.com/resetpassword?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}"
+                Body = resetLink
             };
 
             await _emailService.SendForgotPasswordEmailAsync(emailContent);
@@ -205,7 +205,7 @@ namespace NeighbourhoodHelp.Data.Repository
                 return false; // User not found
             }
 
-            if (user.Otp == otp)
+            if (user.Otp.Equals(otp))
             {
                 // OTP matched, set IsVerified to true and update the user
                 user.EmailConfirmed = true;

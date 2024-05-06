@@ -195,7 +195,7 @@ namespace NeighbourhoodHelp.Data.Repository
 
             var agent = await _context.agents.FindAsync(errand.AgentId);
 
-            if (errand.AgentCounterOffers < 2)
+            if (errand.UserCounterOffers < 2)
             {
                 var appUser = await _context.Users.FindAsync(agent.AppUserId);
                 var agentDetail = _mapper.Map<PriceDto>(agent);

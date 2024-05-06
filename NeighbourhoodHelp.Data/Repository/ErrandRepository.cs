@@ -11,6 +11,7 @@ using AutoMapper;
 using NeighbourhoodHelp.Infrastructure.Helpers;
 using NeighbourhoodHelp.Infrastructure.Interfaces;
 using NeighbourhoodHelp.Model.DTOs;
+using NeighbourhoodHelp.Model.Enums;
 
 namespace NeighbourhoodHelp.Data.Repository
 {
@@ -155,6 +156,38 @@ namespace NeighbourhoodHelp.Data.Repository
                 .FirstOrDefaultAsync(e => e.Agent.Id == agentId);
             var ErrandsDetail = _mapper.Map<PendingErrandDto>(pendingErrand);
             return ErrandsDetail;
+        }
+
+        public async Task<int> GetTotalCompletedErrandsForAgentAsync(Guid agentId)
+        {
+            try
+            {
+                return await _context.Errands
+                    .CountAsync(e => e.AgentId == agentId && e.ErrandStatus == ErrandStatus.Completed);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while getting total completed errands for agent.", ex);
+            }
+        }
+
+        public async Task<decimal> GetTotalAmountEarnedByAgentAsync(Guid agentId)
+        {
+            try
+            {
+                var totalAmount = await _context.Errands
+                    .Where(e => e.AgentId == agentId && e.ErrandStatus == ErrandStatus.Completed)
+                    .SumAsync(e => e.Price);
+
+                return totalAmount;
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while getting total amount earned by agent.", ex);
+            }
+
         }
     }
 }

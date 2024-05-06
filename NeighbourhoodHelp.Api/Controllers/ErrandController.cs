@@ -76,7 +76,19 @@ namespace NeighbourhoodHelp.Api.Controllers
         }
 
 
+        [HttpGet("completed-errands/{agentId}")]
+        public async Task<IActionResult> GetTotalCompletedErrandsForAgent(Guid agentId)
+        {
+            var totalCompletedErrands = await _errandServices.GetTotalCompletedErrandsForAgentAsync(agentId);
+            return Ok(totalCompletedErrands);
+        }
 
+        [HttpGet("total-earned/{agentId}")]
+        public async Task<IActionResult> GetTotalAmountEarnedByAgent(Guid agentId)
+        {
+            var totalEarned = await _errandServices.GetTotalAmountEarnedByAgentAsync(agentId);
+            return Ok(totalEarned);
+        }
 
 
     }

@@ -15,5 +15,7 @@ namespace NeighbourhoodHelp.Core.IServices
         Task<IList<GetErrandDto>> GetAllErrandsByAppUserIdServiceAsync(Guid userId, PaginationParameters paginParams);
         Task<IList<GetErrandDto>> GetAllErrandsByAgentIdServiceAsync(Guid agentId, PaginationParameters paginParams);
         Task<PendingErrandDto> GetPendingErrandByAgentId(Guid agentId);
+        Task<int> GetTotalCompletedErrandsForAgentAsync(Guid agentId);
+        Task<decimal> GetTotalAmountEarnedByAgentAsync(Guid agentId);
     }
 }

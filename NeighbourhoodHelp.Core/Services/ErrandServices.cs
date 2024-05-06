@@ -40,5 +40,15 @@ namespace NeighbourhoodHelp.Core.Services
             // Add any business logic or validation here if needed
             return await _errandRepository.GetPendingErrandByAgentId(agentId);
         }
+
+        public Task<int> GetTotalCompletedErrandsForAgentAsync(Guid agentId)
+        {
+            return _errandRepository.GetTotalCompletedErrandsForAgentAsync(agentId);
+        }
+
+        public Task<decimal> GetTotalAmountEarnedByAgentAsync(Guid agentId)
+        {
+            return _errandRepository.GetTotalAmountEarnedByAgentAsync(agentId);
+        }
     }
 }

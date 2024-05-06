@@ -12,7 +12,6 @@ namespace NeighbourhoodHelp.Model.Entities
         public string City { get; set; }
         public string State { get; set; }
         public string PostalCode { get; set; }
-        public string Time { get; set; }
         public string Date { get; set; }
         public string ItemName { get; set; }
         public string Weight { get; set; }

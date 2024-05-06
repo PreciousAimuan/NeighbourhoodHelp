@@ -50,7 +50,6 @@ namespace NeighbourhoodHelp.Data.Repository
                 City = createErrand.City,
                 Street = createErrand.Street,
                 PostalCode = createErrand.PostalCode,
-                Time = createErrand.Time,
                 Date = createErrand.Date,
                 Weight = createErrand.Weight,
                 Quantity = createErrand.Quantity,
@@ -72,7 +71,7 @@ namespace NeighbourhoodHelp.Data.Repository
               $"Item: {createErrand.ItemName}\n" +
               $"Description: {createErrand.Note}\n" +
               $"Location: {createErrand.City}, {createErrand.State}, {createErrand.PostalCode}\n" +
-              $"Date: {createErrand.Date}, Time: {createErrand.Time}\n\n" +
+              $"Date: {createErrand.Date}\n\n" +
               $"Please contact the app user for further details.\n"
             };
 

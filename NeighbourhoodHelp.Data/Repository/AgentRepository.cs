@@ -105,7 +105,7 @@ namespace NeighbourhoodHelp.Data.Repository
         {
             // Find matching agents based on PostalCode
             var matchingAgents = await _context.agents
-                .Where(a => a.AppUser.PostalCode == errand.PostalCode && !a.IsDeleted)
+                .Where(a => a.PostalCode == errand.PostalCode && !a.IsDeleted)
                 .ToListAsync();
 
             if (matchingAgents.Any())

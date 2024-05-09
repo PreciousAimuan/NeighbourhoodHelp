@@ -189,5 +189,20 @@ namespace NeighbourhoodHelp.Data.Repository
             }
 
         }
+
+        public async Task<bool> CompleteErrand(Guid errandId)
+        {
+            var errand = await _context.Errands.FindAsync(errandId);
+
+            if (errand == null)
+            {
+                return false; // Errand not found
+            }
+
+            errand.ErrandStatus = ErrandStatus.Completed;
+            await _context.SaveChangesAsync();
+
+            return true; // Errand completed successfully
+        }
     }
 }

@@ -50,5 +50,9 @@ namespace NeighbourhoodHelp.Core.Services
         {
             return _errandRepository.GetTotalAmountEarnedByAgentAsync(agentId);
         }
+        public async Task<bool> CompleteErrand(Guid errandId)
+        {
+            return await _errandRepository.CompleteErrand(errandId);
+        }
     }
 }

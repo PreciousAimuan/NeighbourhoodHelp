@@ -108,7 +108,7 @@ namespace NeighbourhoodHelp.Data.Repository
             }
 
             // Soft delete the errand
-            errand.IsDeleted = true;
+            //errand.IsDeleted = true;
 
             // Get the agent using errand.AgentId
             var agent = await _context.agents.FindAsync(errand.AgentId);

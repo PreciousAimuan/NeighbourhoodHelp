@@ -90,6 +90,20 @@ namespace NeighbourhoodHelp.Api.Controllers
             return Ok(totalEarned);
         }
 
+        [HttpPost("completeErrand")]
+        public async Task<IActionResult> CompleteErrand(Guid errandId)
+        {
+            var result = await _errandServices.CompleteErrand(errandId);
+
+            if (result)
+            {
+                return Ok("Errand completed successfully.");
+            }
+            else
+            {
+                return NotFound("Errand not found.");
+            }
+        }
 
     }
 

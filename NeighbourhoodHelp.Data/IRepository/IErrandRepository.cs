@@ -19,6 +19,7 @@ namespace NeighbourhoodHelp.Data.IRepository
         Task<PendingErrandDto> GetPendingErrandByAgentId(Guid agentId);
         Task<int> GetTotalCompletedErrandsForAgentAsync(Guid agentId);
         Task<decimal> GetTotalAmountEarnedByAgentAsync(Guid agentId);
+        Task<bool> CompleteErrand(Guid errandId);
 
     }
 }
